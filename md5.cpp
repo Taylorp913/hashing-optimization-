@@ -18,7 +18,8 @@ using namespace std;
 int main(int argc, char *argv[]) {
     
     unsigned char hash[16];
-    unsigned char pass[] = "abcdefghijklmnopqustuvwxyz";
+    unsigned char pass[] = "abcdefghijklmnopqrstuvwxyz";
+    // Hash is: c3fcd3d76192e4007dfb496cca67e13b
     
     MD5 md5;
     
