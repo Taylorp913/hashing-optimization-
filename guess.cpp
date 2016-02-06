@@ -8,7 +8,7 @@
 
 using namespace std;
 
-union Block in_block;
+union Guess guess;
 
 
 int main() {
@@ -17,19 +17,15 @@ int main() {
     start_time = clock();
 
     
-    //for(uint64_t i = D6; i < D7-1; i++){
-    for(uint64_t i = D6; i < D6+100000; i++){    
-        write_pass(&in_block, i);
-        //guess_print(&in_block);
+    for(uint64_t i = Digit6-10; i < Digit6; i++){
+    //for(uint64_t i = Digit5; i < Digit5+100000; i++){    
+        increment_pass(&guess, i);
+        guess_print(&guess);
     }
 
     final_time = clock();
     //had to multiply by ten since the system had an incorect CLOCKS_PER_SEC value, possibly due to virtual machine
     printf("%f seconds\n",((float)difftime(final_time,start_time))/CLOCKS_PER_SEC*10);
-
-
-
-    printf("END\n");
     
     return 0;
 }
