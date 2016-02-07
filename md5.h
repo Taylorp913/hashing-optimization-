@@ -13,6 +13,57 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstring>
+#include <stdint.h>
+
+//constructore for input data type
+union Guess
+{
+    uint8_t   _8[64];
+    uint32_t  _32[16];
+    uint64_t  _64[8];
+
+    Guess() // initialization
+    {
+        memset(&this->_8[0], 0, 64);
+    };
+};
+#define alph(a) ('a'+a)
+void guess_print(union Guess *guess) {
+    int idx;
+    printf("%c",guess->_8[0]);
+    printf("%c",guess->_8[1]);
+    printf("%c",guess->_8[2]);
+    printf("%c",guess->_8[3]);
+    printf("%c",guess->_8[4]);
+    printf("%c",guess->_8[5]);
+    printf("%c",guess->_8[6]);
+    printf("%c",guess->_8[7]);
+    printf("\n");
+}
+//The increment value for each alpha character in the password 1-26
+#define  I1 (uint64_t) 26
+#define  I2 (uint64_t) 676
+#define  I3 (uint64_t) 17576
+#define  I4 (uint64_t) 456976
+#define  I5 (uint64_t) 11881376
+
+// Digit5 = E5+E4
+#define  Digit5 (uint64_t) 12356630
+#define  Digit6 (uint64_t) 321272406
+
+void increment_pass(union Guess *guess, uint64_t i)
+{
+        guess->_8[0] = alph((i-Digit5) % I1);
+        guess->_8[1] = alph((((i-Digit5)/I1) % I1));
+        guess->_8[2] = alph((((i-Digit5)/I2) % I1));
+        guess->_8[3] = alph((((i-Digit5)/I3) % I1));
+        guess->_8[4] = alph((((i-Digit5)/I4) % I1));
+        guess->_8[5] = alph((((i-Digit5)/I5) % I1));
+        guess->_8[6] = 0x80;
+        memset(&guess->_8[7], 0, 56); //Pad
+        guess->_64[7] = 6 * 8; //length * 8 
+}
+
 
 
 #define alpha 26;
@@ -110,11 +161,11 @@ int S[64] = {
 //uint32_t blocks[16];
 
 typedef struct {
-    unsigned char message[64];		//data
+    unsigned char message[64];      //data
     // unsigned int msg[16];
-    unsigned int msg_len;			//msg_len
-    unsigned int blocks[4];			//blocks
-    unsigned int msgbitlen[2];		//bitlen
+    unsigned int msg_len;           //msg_len
+    unsigned int blocks[4];         //blocks
+    unsigned int msgbitlen[2];      //bitlen
 } MD5;
 
 void md5_initialize(MD5 *md5)
@@ -128,7 +179,7 @@ void md5_initialize(MD5 *md5)
     md5 -> msgbitlen[1] = 0;
     
     // for(unsigned int i = 0; i < 16; i++){
-    // 	md5 -> msg[i] = 0;
+    //  md5 -> msg[i] = 0;
     // }
 }
 
@@ -145,7 +196,8 @@ void md5_set(MD5 *md5, unsigned char message[], unsigned long length) {
 }
 
 
-void md5_manipulate(MD5 *md5, unsigned char message[]) {
+void md5_manipulate(MD5 *md5,union Guess *guess) {
+    unsigned char message[] = {guess->_8[0],guess->_8[1],guess->_8[2],guess->_8[3],guess->_8[4],guess->_8[5],guess->_8[6],guess->_8[7]};
     unsigned int a,b,c,d;
     unsigned int msg[16];
     unsigned int i,j;
@@ -286,6 +338,7 @@ void md5_print(unsigned char final[]) {
         printf("%02x",final[idx]);
     printf("\n");
 }
+
 
 
 #endif /* md5_h */

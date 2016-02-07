@@ -3,7 +3,7 @@
 //  md5_project
 //
 //  Created by Taylor Peterson on 2/6/16.
-//  Copyright © 2016 Taylor Peterson. All rights reserved.
+//  Copyright Â© 2016 Taylor Peterson. All rights reserved.
 //
 // #ifndef md5_h
 // #define md5_h
