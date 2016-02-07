@@ -196,8 +196,7 @@ void md5_set(MD5 *md5, unsigned char message[], unsigned long length) {
 }
 
 
-void md5_manipulate(MD5 *md5,union Guess *guess) {
-    unsigned char message[] = {guess->_8[0],guess->_8[1],guess->_8[2],guess->_8[3],guess->_8[4],guess->_8[5],guess->_8[6],guess->_8[7]};
+void md5_manipulate(MD5 *md5, unsigned char message[]) {
     unsigned int a,b,c,d;
     unsigned int msg[16];
     unsigned int i,j;
