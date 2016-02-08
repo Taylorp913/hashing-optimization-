@@ -196,15 +196,16 @@ void md5_set(MD5 *md5, unsigned char message[], unsigned long length) {
 }
 
 
-void md5_manipulate(MD5 *md5, unsigned char message[]) {
+void md5_manipulate(MD5 *md5,union Guess *gss) {
+    //unsigned char message[] = {guess->_8[0],guess->_8[1],guess->_8[2],guess->_8[3],guess->_8[4],guess->_8[5],guess->_8[6],guess->_8[7]};
     unsigned int a,b,c,d;
-    unsigned int msg[16];
+    //unsigned int msg[16];
     unsigned int i,j;
     
-    // For loop changes from big endian to little endian
-    for (i = 0, j = 0; i < 16; i++, j += 4) {
-        msg[i] = (message[j]) + (message[j + 1] << 8) + (message[j + 2] << 16) + (message[j + 3] << 24);
-    }
+    // // For loop changes from big endian to little endian
+    // for (i = 0, j = 0; i < 16; i++, j += 4) {
+    //     msg[i] = (message[j]) + (message[j + 1] << 8) + (message[j + 2] << 16) + (message[j + 3] << 24);
+    // }
     
     // Store all initial values of a,b,c,d into their respective variables for manipulation
     a = md5 -> blocks[0];
@@ -212,73 +213,73 @@ void md5_manipulate(MD5 *md5, unsigned char message[]) {
     c = md5 -> blocks[2];
     d = md5 -> blocks[3];
     
-    FF(a, b, c, d, msg[0],  S[0],  T[0]);
-    FF(d, a, b, c, msg[1],  S[1],  T[1]);
-    FF(c, d, a, b, msg[2],  S[2],  T[2]);
-    FF(b, c, d, a, msg[3],  S[3],  T[3]);
-    FF(a, b, c, d, msg[4],  S[4],  T[4]);
-    FF(d, a, b, c, msg[5],  S[5],  T[5]);
-    FF(c, d, a, b, msg[6],  S[6],  T[6]);
-    FF(b, c, d, a, msg[7],  S[7],  T[7]);
-    FF(a, b, c, d, msg[8],  S[8],  T[8]);
-    FF(d, a, b, c, msg[9],  S[9],  T[9]);
-    FF(c, d, a, b, msg[10], S[10], T[10]);
-    FF(b, c, d, a, msg[11], S[11], T[11]);
-    FF(a, b, c, d, msg[12], S[12], T[12]);
-    FF(d, a, b, c, msg[13], S[13], T[13]);
-    FF(c, d, a, b, msg[14], S[14], T[14]);
-    FF(b, c, d, a, msg[15], S[15], T[15]);
+    FF(a, b, c, d, gss->_32[0],  S[0],  T[0]);
+    FF(d, a, b, c, gss->_32[1],  S[1],  T[1]);
+    FF(c, d, a, b, gss->_32[2],  S[2],  T[2]);
+    FF(b, c, d, a, gss->_32[3],  S[3],  T[3]);
+    FF(a, b, c, d, gss->_32[4],  S[4],  T[4]);
+    FF(d, a, b, c, gss->_32[5],  S[5],  T[5]);
+    FF(c, d, a, b, gss->_32[6],  S[6],  T[6]);
+    FF(b, c, d, a, gss->_32[7],  S[7],  T[7]);
+    FF(a, b, c, d, gss->_32[8],  S[8],  T[8]);
+    FF(d, a, b, c, gss->_32[9],  S[9],  T[9]);
+    FF(c, d, a, b, gss->_32[10], S[10], T[10]);
+    FF(b, c, d, a, gss->_32[11], S[11], T[11]);
+    FF(a, b, c, d, gss->_32[12], S[12], T[12]);
+    FF(d, a, b, c, gss->_32[13], S[13], T[13]);
+    FF(c, d, a, b, gss->_32[14], S[14], T[14]);
+    FF(b, c, d, a, gss->_32[15], S[15], T[15]);
     
-    GG(a, b, c, d, msg[1],  S[16], T[16]);
-    GG(d, a, b, c, msg[6],  S[17], T[17]);
-    GG(c, d, a, b, msg[11], S[18], T[18]);
-    GG(b, c, d, a, msg[0],  S[19], T[19]);
-    GG(a, b, c, d, msg[5],  S[20], T[20]);
-    GG(d, a, b, c, msg[10], S[21], T[21]);
-    GG(c, d, a, b, msg[15], S[22], T[22]);
-    GG(b, c, d, a, msg[4],  S[23], T[23]);
-    GG(a, b, c, d, msg[9],  S[24], T[24]);
-    GG(d, a, b, c, msg[14], S[25], T[25]);
-    GG(c, d, a, b, msg[3],  S[26], T[26]);
-    GG(b, c, d, a, msg[8],  S[27], T[27]);
-    GG(a, b, c, d, msg[13], S[28], T[28]);
-    GG(d, a, b, c, msg[2],  S[29], T[29]);
-    GG(c, d, a, b, msg[7],  S[30], T[30]);
-    GG(b, c, d, a, msg[12], S[31], T[31]);
+    GG(a, b, c, d, gss->_32[1],  S[16], T[16]);
+    GG(d, a, b, c, gss->_32[6],  S[17], T[17]);
+    GG(c, d, a, b, gss->_32[11], S[18], T[18]);
+    GG(b, c, d, a, gss->_32[0],  S[19], T[19]);
+    GG(a, b, c, d, gss->_32[5],  S[20], T[20]);
+    GG(d, a, b, c, gss->_32[10], S[21], T[21]);
+    GG(c, d, a, b, gss->_32[15], S[22], T[22]);
+    GG(b, c, d, a, gss->_32[4],  S[23], T[23]);
+    GG(a, b, c, d, gss->_32[9],  S[24], T[24]);
+    GG(d, a, b, c, gss->_32[14], S[25], T[25]);
+    GG(c, d, a, b, gss->_32[3],  S[26], T[26]);
+    GG(b, c, d, a, gss->_32[8],  S[27], T[27]);
+    GG(a, b, c, d, gss->_32[13], S[28], T[28]);
+    GG(d, a, b, c, gss->_32[2],  S[29], T[29]);
+    GG(c, d, a, b, gss->_32[7],  S[30], T[30]);
+    GG(b, c, d, a, gss->_32[12], S[31], T[31]);
     
-    HH(a, b, c, d, msg[5],  S[32], T[32]);
-    HH(d, a, b, c, msg[8],  S[33], T[33]);
-    HH(c, d, a, b, msg[11], S[34], T[34]);
-    HH(b, c, d, a, msg[14], S[35], T[35]);
-    HH(a, b, c, d, msg[1],  S[36], T[36]);
-    HH(d, a, b, c, msg[4],  S[37], T[37]);
-    HH(c, d, a, b, msg[7],  S[38], T[38]);
-    HH(b, c, d, a, msg[10], S[39], T[39]);
-    HH(a, b, c, d, msg[13], S[40], T[40]);
-    HH(d, a, b, c, msg[0],  S[41], T[41]);
-    HH(c, d, a, b, msg[3],  S[42], T[42]);
-    HH(b, c, d, a, msg[6],  S[43], T[43]);
-    HH(a, b, c, d, msg[9],  S[44], T[44]);
-    HH(d, a, b, c, msg[12], S[45], T[45]);
-    HH(c, d, a, b, msg[15], S[46], T[46]);
-    HH(b, c, d, a, msg[2],  S[47], T[47]);
+    HH(a, b, c, d, gss->_32[5],  S[32], T[32]);
+    HH(d, a, b, c, gss->_32[8],  S[33], T[33]);
+    HH(c, d, a, b, gss->_32[11], S[34], T[34]);
+    HH(b, c, d, a, gss->_32[14], S[35], T[35]);
+    HH(a, b, c, d, gss->_32[1],  S[36], T[36]);
+    HH(d, a, b, c, gss->_32[4],  S[37], T[37]);
+    HH(c, d, a, b, gss->_32[7],  S[38], T[38]);
+    HH(b, c, d, a, gss->_32[10], S[39], T[39]);
+    HH(a, b, c, d, gss->_32[13], S[40], T[40]);
+    HH(d, a, b, c, gss->_32[0],  S[41], T[41]);
+    HH(c, d, a, b, gss->_32[3],  S[42], T[42]);
+    HH(b, c, d, a, gss->_32[6],  S[43], T[43]);
+    HH(a, b, c, d, gss->_32[9],  S[44], T[44]);
+    HH(d, a, b, c, gss->_32[12], S[45], T[45]);
+    HH(c, d, a, b, gss->_32[15], S[46], T[46]);
+    HH(b, c, d, a, gss->_32[2],  S[47], T[47]);
     
-    II(a, b, c, d, msg[0],  S[48], T[48]);
-    II(d, a, b, c, msg[7],  S[49], T[49]);
-    II(c, d, a, b, msg[14], S[50], T[50]);
-    II(b, c, d, a, msg[5],  S[51], T[51]);
-    II(a, b, c, d, msg[12], S[52], T[52]);
-    II(d, a, b, c, msg[3],  S[53], T[53]);
-    II(c, d, a, b, msg[10], S[54], T[54]);
-    II(b, c, d, a, msg[1],  S[55], T[55]);
-    II(a, b, c, d, msg[8],  S[56], T[56]);
-    II(d, a, b, c, msg[15], S[57], T[57]);
-    II(c, d, a, b, msg[6],  S[58], T[58]);
-    II(b, c, d, a, msg[13], S[59], T[59]);
-    II(a, b, c, d, msg[4],  S[60], T[60]);
-    II(d, a, b, c, msg[11], S[61], T[61]);
-    II(c, d, a, b, msg[2],  S[62], T[62]);
-    II(b, c, d, a, msg[9],  S[63], T[63]);
+    II(a, b, c, d, gss->_32[0],  S[48], T[48]);
+    II(d, a, b, c, gss->_32[7],  S[49], T[49]);
+    II(c, d, a, b, gss->_32[14], S[50], T[50]);
+    II(b, c, d, a, gss->_32[5],  S[51], T[51]);
+    II(a, b, c, d, gss->_32[12], S[52], T[52]);
+    II(d, a, b, c, gss->_32[3],  S[53], T[53]);
+    II(c, d, a, b, gss->_32[10], S[54], T[54]);
+    II(b, c, d, a, gss->_32[1],  S[55], T[55]);
+    II(a, b, c, d, gss->_32[8],  S[56], T[56]);
+    II(d, a, b, c, gss->_32[15], S[57], T[57]);
+    II(c, d, a, b, gss->_32[6],  S[58], T[58]);
+    II(b, c, d, a, gss->_32[13], S[59], T[59]);
+    II(a, b, c, d, gss->_32[4],  S[60], T[60]);
+    II(d, a, b, c, gss->_32[11], S[61], T[61]);
+    II(c, d, a, b, gss->_32[2],  S[62], T[62]);
+    II(b, c, d, a, gss->_32[9],  S[63], T[63]);
     
     md5->blocks[0] += a;
     md5->blocks[1] += b;

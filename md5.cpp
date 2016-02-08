@@ -31,19 +31,19 @@ int main(int argc, char *argv[]) {
     
 
     //for(uint64_t i = Digit5; i < Digit6; i++){//full test
-    for(uint64_t i = Digit5; i < Digit5+1; i++){//short test
+    for(uint64_t i = Digit5; i < Digit6; i++){//short test
         increment_pass(&guess, i);
-        guess_print(&guess);
-		unsigned char pass[] = {&guess->_8[0],&guess->_8[1],&guess->_8[2],&guess->_8[3],&guess->_8[4],&guess->_8[5],&guess->_8[6]};
-		md5_set(&md5, pass, strlen((char*)pass));
-		md5_pad(&md5);
-		md5_manipulate(&md5, md5.message);
+        //guess_print(&guess);
+        //md5_set(&md5,pass,strlen((char*)pass));
+        //md5_pad(&md5);
+        md5_initialize(&md5);
+        md5_manipulate(&md5,&guess);
         md5_bigendian(&md5,hash);
-        md5_print(hash);
+        //md5_print(hash);
 
 
     }
-	printf("b1ffb6b5d22cd9f210fbc8b7fdaf0e19\n");
+
 
 
     final_time = clock();
