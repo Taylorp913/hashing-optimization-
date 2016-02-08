@@ -208,10 +208,10 @@ void md5_manipulate(MD5 *md5,union Guess *gss) {
     // }
     
     // Store all initial values of a,b,c,d into their respective variables for manipulation
-    a = ai;
-    b = bi;
-    c = ci;
-    d = di;
+    a = md5 -> blocks[0];
+    b = md5 -> blocks[1];
+    c = md5 -> blocks[2];
+    d = md5 -> blocks[3];
     
     FF(a, b, c, d, gss->_32[0],  S[0],  T[0]);
     FF(d, a, b, c, gss->_32[1],  S[1],  T[1]);
@@ -281,10 +281,10 @@ void md5_manipulate(MD5 *md5,union Guess *gss) {
     II(c, d, a, b, gss->_32[2],  S[62], T[62]);
     II(b, c, d, a, gss->_32[9],  S[63], T[63]);
     
-    //md5->blocks[0] += a;
-    //md5->blocks[1] += b;
-    //md5->blocks[2] += c;
-    //md5->blocks[3] += d;
+    md5->blocks[0] += a;
+    md5->blocks[1] += b;
+    md5->blocks[2] += c;
+    md5->blocks[3] += d;
 }
 
 void md5_pad(MD5 *md5) {
