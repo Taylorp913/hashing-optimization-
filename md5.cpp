@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
     
 
     //for(uint64_t i = Digit5; i < Digit6; i++){//full test
+<<<<<<< HEAD
     for(uint64_t i = Digit5; i < Digit5+1; i++){//short test
         increment_pass(&guess, i);
         guess_print(&guess);
@@ -40,6 +41,20 @@ int main(int argc, char *argv[]) {
 		md5_manipulate(&md5, md5.message);
         md5_bigendian(&md5,hash);
         md5_print(hash);
+=======
+    for(uint64_t i = Digit5; i < Digit6; i++){//short test
+        increment_pass(&guess, i);
+        //guess_print(&guess);
+        //md5_set(&md5,pass,strlen((char*)pass));
+        //md5_pad(&md5);
+        md5_initialize(&md5);
+        md5_manipulate(&md5,&guess);
+        md5_bigendian(&md5,hash);
+        //md5_print(hash);
+
+
+    }
+>>>>>>> parent of edf830d... save before further cleanup
 
 
     }
