@@ -13,15 +13,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstring>
+#include "immintrin.h"
+#include "emmintrin.h"
 
 // Used for shorter declarations
 #define uchar unsigned char
 #define uint unsigned int
 #define ulong unsigned long
-
-unsigned char lower[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-unsigned char upper[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-
 
 // Initial first block values
 uint32_t ai = 0x67452301;
@@ -74,7 +72,7 @@ a = (b + a); \
 //    1873313359, 4264355553, 2734768917, 1309151649, 4149444226, 3174756918, 718787260, 3951481746,
 //};
 
-uint32_t T[64] = {
+uint T[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -97,7 +95,7 @@ uint32_t T[64] = {
 };
 
 // All the 's' values for the 4 rounds
-int S[64] = {
+uint S[64] = {
     7, 12, 17, 22,  7, 12, 17, 22,
     7, 12, 17, 22,  7, 12, 17, 22,
     
@@ -125,8 +123,13 @@ typedef struct {
     uint blocks1[4];
     uint blocks2[4];
     uint blocks3[4];
-//    const __m128i message_avx;
-//    const __m128i blocks_avx;
+    __128i avxa, avxb, avxc, avxd;
+    __128i avx0, avx1, avx2, avx3;
+    __128i avx4, avx5, avx6, avx7;
+    __128i avx8, avx9, avx10, avx11;
+    __128i avx12, avx13, avx14, avx15;
+    __128i avx_hash0, avx_hash1, avx_hash2, avx_hash3;
+    __m128i f1,f2,f3,f4,f5,f6,f7,f8,f9,f0;
 } MD5;
 
 // Initialize struct elements
@@ -161,6 +164,43 @@ void md5_initialize(MD5 *md5)
     md5 -> blocks3[1] = bi;
     md5 -> blocks3[2] = ci;
     md5 -> blocks3[3] = di;
+
+    __m128i avxa = _mm_setr_epi32(0x67452301,0x67452301,0x67452301,0x67452301);
+    __m128i avxb = _mm_setr_epi32(0xefcdab89,0xefcdab89,0xefcdab89,0xefcdab89);
+    __m128i avxc = _mm_setr_epi32(0x98badcfe,0x98badcfe,0x98badcfe,0x98badcfe);
+    __m128i avxd = _mm_setr_epi32(0x10325476,0x10325476,0x10325476,0x10325476);
+
+    __m128i avx0 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx1 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx2 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx3 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx4 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx5 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx6 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx7 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx8 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx9 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx10 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx11 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx12 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx13 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx14 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx15 = _mm_setr_epi32(0,0,0,0);
+
+    __m128i avx_hash0 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx_hash1 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx_hash2 = _mm_setr_epi32(0,0,0,0);
+    __m128i avx_hash3 = _mm_setr_epi32(0,0,0,0);
+    
+    __m128i f1 = _mm_setr_epi32(0,0,0,0);
+    __m128i f2 = _mm_setr_epi32(0,0,0,0);
+    __m128i f3 = _mm_setr_epi32(0,0,0,0);
+    __m128i f4 = _mm_setr_epi32(0,0,0,0);
+    __m128i f5 = _mm_setr_epi32(0,0,0,0);
+    __m128i f6 = _mm_setr_epi32(0,0,0,0);
+    __m128i f7 = _mm_setr_epi32(0,0,0,0);
+    __m128i f8 = _mm_setr_epi32(0,0,0,0);
+    __m128i f9 = _mm_setr_epi32(0,0,0,0);
 }
 
 
@@ -237,7 +277,6 @@ void md5_pad(MD5 *md5){
 void md5_manipulate(MD5 *md5, uchar message0[], uchar message1[], uchar message2[], uchar message3[]) {
     uint a,b,c,d;
     uint msg0[16], msg1[16], msg2[16], msg3[16];
-    uint msg00[16], msg11[16], msg22[16], msg33[16];
     uint i,j;
     
     // For loop changes from big endian to little endian
@@ -256,23 +295,7 @@ void md5_manipulate(MD5 *md5, uchar message0[], uchar message1[], uchar message2
     for (i = 0, j = 0; i < 16; i++, j += 4) {
         msg3[i] = (message3[j]) + (message3[j + 1] << 8) + (message3[j + 2] << 16) + (message3[j + 3] << 24);
     }
-    
-    // Just for setting msg 0_3 without changing endian for testing purposes
-    for (i = 0, j = 0; i < 16; i++, j += 4) {
-        msg00[i] = (message0[j]) + (message0[j + 1]) + (message0[j + 2]) + (message0[j + 3]);
-    }
-    
-    for (i = 0, j = 0; i < 16; i++, j += 4) {
-        msg11[i] = (message1[j]) + (message1[j + 1]) + (message1[j + 2]) + (message1[j + 3]);
-    }
-    
-    for (i = 0, j = 0; i < 16; i++, j += 4) {
-        msg22[i] = (message2[j]) + (message2[j + 1]) + (message2[j + 2]) + (message2[j + 3]);
-    }
-    
-    for (i = 0, j = 0; i < 16; i++, j += 4) {
-        msg33[i] = (message3[j]) + (message3[j + 1]) + (message3[j + 2]) + (message3[j + 3]);
-    }
+
     
     // Store all initial values of a,b,c,d into their respective variables for manipulation
     
@@ -652,30 +675,6 @@ void md5_print(unsigned char final[]) {
         printf("%x",final[idx]);
     printf("\n");
 }
-
-
-
-
-
-    void avx_and(unsigned* dst, const unsigned* src, unsigned block_size)
-{
-      const __m128i* wrd_ptr = (__m128i*)src;
-      const __m128i* wrd_end = (__m128i*)(src + block_size);
-      __m128i* dst_ptr = (__m128i*)dst;
-
-      do
-      {
-           __m128i xmm1 = _mm_load_si128(wrd_ptr);
-           __m128i xmm2 = _mm_load_si128(dst_ptr);
-                
-           __m128i xmm1 = _mm_and_si128(xmm1, xmm2);     //  AND  4 32-bit words
-           _mm_store_si128(dst_ptr, xmm1);
-           ++dst_ptr;
-           ++wrd_ptr;
-
-      } while (wrd_ptr < wrd_end);
-}
-
 
 #endif /* avx_test_h */
 
