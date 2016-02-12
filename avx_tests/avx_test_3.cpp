@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     avx_print(&md5,md5.message2);
     avx_print(&md5,md5.message3);
     avx_manipulate_p1(&md5,md5.message0,md5.message1,md5.message2,md5.message3);
-    // avx_manipulate_p2(&md5);
+    avx_manipulate_p2(&md5);
     // avx_bigendian(&md5,hash0,hash1,hash2,hash3);
     // avx_print(hash0);
     // avx_print(hash1);

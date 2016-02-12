@@ -117,7 +117,8 @@ int main() {
   // hd3 = hd1 | hd2;
   // hd4 = (a + hd3 + m + t);
 
-
+  int* res0 = (int*)&hd4;
+  printf("hd4 =  %x %x %x %x\n",res0[0],res0[1],res0[2],res0[3]);
   int* res1 = (int*)&a;
   printf("a =  %x %x %x %x\n",res1[0],res1[1],res1[2],res1[3]);
   int* res2 = (int*)&m;
@@ -142,10 +143,13 @@ int main() {
   printf("hd1 =  %x %x %x %x\n",res11[0],res11[1],res11[2],res11[3]);
   int* res12 = (int*)&hd2;
   printf("hd2 =  %x %x %x %x\n",res12[0],res12[1],res12[2],res12[3]);
-  // int* res13 = (int*)&hd3;
-  // printf("hd3 =  %x %x %x %x\n",res13[0],res13[1],res13[2],res13[3]);
-  // int* res14 = (int*)&hd4;
-  // printf("hd4 =  %x %x %x %x\n",res14[0],res14[1],res14[2],res14[3]);
+  int* res13 = (int*)&hd3;
+  printf("hd3 =  %x %x %x %x\n",res13[0],res13[1],res13[2],res13[3]);
+  int* res14 = (int*)&hd4;
+  printf("hd4 =  %x %x %x %x\n",res14[0],res14[1],res14[2],res14[3]);
+  int* res15 = (int*)&hd3;
+  printf("hd3 =  %x %x %x %x\n",res15[0],res15[1],res15[2],res15[3]);
+  
 
   // printf("b = %x %x %x %x\n",b[0],b[1],b[2],b[3]);
   // printf("c = %x %x %x %x\n",c[0],c[1],c[2],c[3]);

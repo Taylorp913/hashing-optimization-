@@ -79,8 +79,12 @@ typedef struct {
     __m128i avx12, avx13, avx14, avx15;
     __m128i avx_hash0, avx_hash1, avx_hash2, avx_hash3;
     __m128i f1,f2,f3,f4,f5,f6,f7,f8,f9,f0;
+    __m128i a,b,c,d,l;
+    __m128i T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15;
+    __m128i T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26,T27,T28,T29,T30,T31;
+    __m128i T32,T33,T34,T35,T36,T37,T38,T39,T40,T41,T42,T43,T44,T45,T46,T47;
+    __m128i T48,T49,T50,T51,T52,T53,T54,T55,T56,T57,T58,T59,T60,T61,T62,T63;
 } MD5;
-
 
 
 void avx_print(MD5 *md5, uchar final[]) {
@@ -109,117 +113,139 @@ void avx_print_char(unsigned char final[]) {
 void avx_initialize(MD5 *md5)
 {
     // LENGTH 0_3
-    md5 -> msg_len0 = 0;
-    md5 -> msg_len1 = 0;
-    md5 -> msg_len2 = 0;
-    md5 -> msg_len3 = 0;
+    md5->msg_len0 = 0;
+    md5->msg_len1 = 0;
+    md5->msg_len2 = 0;
+    md5->msg_len3 = 0;
 
-    __m128i avxa = _mm_setr_epi32(0x67452301,0x67452301,0x67452301,0x67452301);
-    __m128i avxb = _mm_setr_epi32(0xefcdab89,0xefcdab89,0xefcdab89,0xefcdab89);
-    __m128i avxc = _mm_setr_epi32(0x98badcfe,0x98badcfe,0x98badcfe,0x98badcfe);
-    __m128i avxd = _mm_setr_epi32(0x10325476,0x10325476,0x10325476,0x10325476);
+    // int* resT0 = (int*)&T[0];
+    // printf("T0 =  %x %x %x %x\n",resT0[0],resT0[1],resT0[2],resT0[3]);
 
-    __m128i avx0 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx1 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx2 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx3 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx4 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx5 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx6 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx7 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx8 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx9 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx10 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx11 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx12 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx13 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx14 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx15 = _mm_setr_epi32(0,0,0,0);
+    // Have to initialize the 'T' vector pointer
+    __m128 *T = (__m128*) md5;
+    T[0] = _mm_setr_epi32(0xd76aa478,0xd76aa478,0xd76aa478,0xd76aa478);
+    T[1] = _mm_setr_epi32(0xe8c7b756,0xe8c7b756,0xe8c7b756,0xe8c7b756); 
+    T[2] = _mm_setr_epi32(0x242070db,0x242070db,0x242070db,0x242070db); 
+    T[3] = _mm_setr_epi32(0xc1bdceee,0xc1bdceee,0xc1bdceee,0xc1bdceee);
+    T[4] = _mm_setr_epi32(0xf57c0faf,0xf57c0faf,0xf57c0faf,0xf57c0faf); 
+    T[5] = _mm_setr_epi32(0x4787c62a,0x4787c62a,0x4787c62a,0x4787c62a); 
+    T[6] = _mm_setr_epi32(0xa8304613,0xa8304613,0xa8304613,0xa8304613); 
+    T[7] = _mm_setr_epi32(0xfd469501,0xfd469501,0xfd469501,0xfd469501);
+    T[8] = _mm_setr_epi32(0x698098d8,0x698098d8,0x698098d8,0x698098d8); 
+    T[9] = _mm_setr_epi32(0x8b44f7af,0x8b44f7af,0x8b44f7af,0x8b44f7af); 
+    T[10] = _mm_setr_epi32(0xffff5bb1,0xffff5bb1,0xffff5bb1,0xffff5bb1); 
+    T[11] = _mm_setr_epi32(0x895cd7be,0x895cd7be,0x895cd7be,0x895cd7be);
+    T[12] = _mm_setr_epi32(0x6b901122,0x6b901122,0x6b901122,0x6b901122); 
+    T[13] = _mm_setr_epi32(0xfd987193,0xfd987193,0xfd987193,0xfd987193); 
+    T[14] = _mm_setr_epi32(0xa679438e,0xa679438e,0xa679438e,0xa679438e); 
+    T[15] = _mm_setr_epi32(0x49b40821,0x49b40821,0x49b40821,0x49b40821);
+    
+    T[16] = _mm_setr_epi32(0xf61e2562,0xf61e2562,0xf61e2562,0xf61e2562); 
+    T[17] = _mm_setr_epi32(0xc040b340,0xc040b340,0xc040b340,0xc040b340); 
+    T[18] = _mm_setr_epi32(0x265e5a51,0x265e5a51,0x265e5a51,0x265e5a51); 
+    T[19] = _mm_setr_epi32(0xe9b6c7aa,0xe9b6c7aa,0xe9b6c7aa,0xe9b6c7aa);
+    T[20] = _mm_setr_epi32(0xd62f105d,0xd62f105d,0xd62f105d,0xd62f105d); 
+    T[21] = _mm_setr_epi32(0x02441453,0x02441453,0x02441453,0x02441453); 
+    T[22] = _mm_setr_epi32(0xd8a1e681,0xd8a1e681,0xd8a1e681,0xd8a1e681); 
+    T[23] = _mm_setr_epi32(0xe7d3fbc8,0xe7d3fbc8,0xe7d3fbc8,0xe7d3fbc8);
+    T[24] = _mm_setr_epi32(0x21e1cde6,0x21e1cde6,0x21e1cde6,0x21e1cde6); 
+    T[25] = _mm_setr_epi32(0xc33707d6,0xc33707d6,0xc33707d6,0xc33707d6); 
+    T[26] = _mm_setr_epi32(0xf4d50d87,0xf4d50d87,0xf4d50d87,0xf4d50d87); 
+    T[27] = _mm_setr_epi32(0x455a14ed,0x455a14ed,0x455a14ed,0x455a14ed);
+    T[28] = _mm_setr_epi32(0xa9e3e905,0xa9e3e905,0xa9e3e905,0xa9e3e905); 
+    T[29] = _mm_setr_epi32(0xfcefa3f8,0xfcefa3f8,0xfcefa3f8,0xfcefa3f8); 
+    T[30] = _mm_setr_epi32(0x676f02d9,0x676f02d9,0x676f02d9,0x676f02d9); 
+    T[31] = _mm_setr_epi32(0x8d2a4c8a,0x8d2a4c8a,0x8d2a4c8a,0x8d2a4c8a);
+    
+    T[32] = _mm_setr_epi32(0xfffa3942,0xfffa3942,0xfffa3942,0xfffa3942); 
+    T[33] = _mm_setr_epi32(0x8771f681,0x8771f681,0x8771f681,0x8771f681); 
+    T[34] = _mm_setr_epi32(0x6d9d6122,0x6d9d6122,0x6d9d6122,0x6d9d6122); 
+    T[35] = _mm_setr_epi32(0xfde5380c,0xfde5380c,0xfde5380c,0xfde5380c);
+    T[36] = _mm_setr_epi32(0xa4beea44,0xa4beea44,0xa4beea44,0xa4beea44); 
+    T[37] = _mm_setr_epi32(0x4bdecfa9,0x4bdecfa9,0x4bdecfa9,0x4bdecfa9); 
+    T[38] = _mm_setr_epi32(0xf6bb4b60,0xf6bb4b60,0xf6bb4b60,0xf6bb4b60); 
+    T[39] = _mm_setr_epi32(0xbebfbc70,0xbebfbc70,0xbebfbc70,0xbebfbc70);
+    T[40] = _mm_setr_epi32(0x289b7ec6,0x289b7ec6,0x289b7ec6,0x289b7ec6); 
+    T[41] = _mm_setr_epi32(0xeaa127fa,0xeaa127fa,0xeaa127fa,0xeaa127fa); 
+    T[42] = _mm_setr_epi32(0xd4ef3085,0xd4ef3085,0xd4ef3085,0xd4ef3085); 
+    T[43] = _mm_setr_epi32(0x04881d05,0x04881d05,0x04881d05,0x04881d05);
+    T[44] = _mm_setr_epi32(0xd9d4d039,0xd9d4d039,0xd9d4d039,0xd9d4d039); 
+    T[45] = _mm_setr_epi32(0xe6db99e5,0xe6db99e5,0xe6db99e5,0xe6db99e5); 
+    T[46] = _mm_setr_epi32(0x1fa27cf8,0x1fa27cf8,0x1fa27cf8,0x1fa27cf8); 
+    T[47] = _mm_setr_epi32(0xc4ac5665,0xc4ac5665,0xc4ac5665,0xc4ac5665);
+    
+    T[48] = _mm_setr_epi32(0xf4292244,0xf4292244,0xf4292244,0xf4292244); 
+    T[49] = _mm_setr_epi32(0x432aff97,0x432aff97,0x432aff97,0x432aff97); 
+    T[50] = _mm_setr_epi32(0xab9423a7,0xab9423a7,0xab9423a7,0xab9423a7); 
+    T[51] = _mm_setr_epi32(0xfc93a039,0xfc93a039,0xfc93a039,0xfc93a039);
+    T[52] = _mm_setr_epi32(0x655b59c3,0x655b59c3,0x655b59c3,0x655b59c3); 
+    T[53] = _mm_setr_epi32(0x8f0ccc92,0x8f0ccc92,0x8f0ccc92,0x8f0ccc92); 
+    T[54] = _mm_setr_epi32(0xffeff47d,0xffeff47d,0xffeff47d,0xffeff47d); 
+    T[55] = _mm_setr_epi32(0x85845dd1,0x85845dd1,0x85845dd1,0x85845dd1);
+    T[56] = _mm_setr_epi32(0x6fa87e4f,0x6fa87e4f,0x6fa87e4f,0x6fa87e4f); 
+    T[57] = _mm_setr_epi32(0xfe2ce6e0,0xfe2ce6e0,0xfe2ce6e0,0xfe2ce6e0); 
+    T[58] = _mm_setr_epi32(0xa3014314,0xa3014314,0xa3014314,0xa3014314); 
+    T[59] = _mm_setr_epi32(0x4e0811a1,0x4e0811a1,0x4e0811a1,0x4e0811a1);
+    T[60] = _mm_setr_epi32(0xf7537e82,0xf7537e82,0xf7537e82,0xf7537e82); 
+    T[61] = _mm_setr_epi32(0xbd3af235,0xbd3af235,0xbd3af235,0xbd3af235); 
+    T[62] = _mm_setr_epi32(0x2ad7d2bb,0x2ad7d2bb,0x2ad7d2bb,0x2ad7d2bb); 
+    T[63] = _mm_setr_epi32(0xeb86d391,0xeb86d391,0xeb86d391,0xeb86d391);
 
-    __m128i avx_hash0 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx_hash1 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx_hash2 = _mm_setr_epi32(0,0,0,0);
-    __m128i avx_hash3 = _mm_setr_epi32(0,0,0,0);
-    
-    __m128i f1 = _mm_setr_epi32(0,0,0,0);
-    __m128i f2 = _mm_setr_epi32(0,0,0,0);
-    __m128i f3 = _mm_setr_epi32(0,0,0,0);
-    __m128i f4 = _mm_setr_epi32(0,0,0,0);
-    __m128i f5 = _mm_setr_epi32(0,0,0,0);
-    __m128i f6 = _mm_setr_epi32(0,0,0,0);
-    __m128i f7 = _mm_setr_epi32(0,0,0,0);
-    __m128i f8 = _mm_setr_epi32(0,0,0,0);
-    __m128i f9 = _mm_setr_epi32(0,0,0,0);
-    __m128i f0 = _mm_setr_epi32(0,0,0,0);
+    __m128 *a = (__m128*) md5;
+    a = _mm_setr_epi32(0x67452301,0x67452301,0x67452301,0x67452301);
+    __m128 *b = (__m128*) md5;
+    b = _mm_setr_epi32(0xefcdab89,0xefcdab89,0xefcdab89,0xefcdab89);
+    __m128 *c = (__m128*) md5;
+    c = _mm_setr_epi32(0x98badcfe,0x98badcfe,0x98badcfe,0x98badcfe);
+    __m128 *d = (__m128*) md5;
+    d = _mm_setr_epi32(0x10325476,0x10325476,0x10325476,0x10325476);
+    __m128 *l = (__m128*) md5;
+    l = _mm_setr_epi32(0x11111111,0x11111111,0x11111111,0x11111111);
 
-    // Have to initialize the 'T' vector
-    __m128i T0 = _mm_setr_epi32(0xd76aa478,0xd76aa478,0xd76aa478,0xd76aa478); 
-    __m128i T1 = _mm_setr_epi32(0xe8c7b756,0xe8c7b756,0xe8c7b756,0xe8c7b756); 
-    __m128i T2 = _mm_setr_epi32(0x242070db,0x242070db,0x242070db,0x242070db); 
-    __m128i T3 = _mm_setr_epi32(0xc1bdceee,0xc1bdceee,0xc1bdceee,0xc1bdceee);
-    __m128i T4 = _mm_setr_epi32(0xf57c0faf,0xf57c0faf,0xf57c0faf,0xf57c0faf); 
-    __m128i T5 = _mm_setr_epi32(0x4787c62a,0x4787c62a,0x4787c62a,0x4787c62a); 
-    __m128i T6 = _mm_setr_epi32(0xa8304613,0xa8304613,0xa8304613,0xa8304613); 
-    __m128i T7 = _mm_setr_epi32(0xfd469501,0xfd469501,0xfd469501,0xfd469501);
-    __m128i T8 = _mm_setr_epi32(0x698098d8,0x698098d8,0x698098d8,0x698098d8); 
-    __m128i T9 = _mm_setr_epi32(0x8b44f7af,0x8b44f7af,0x8b44f7af,0x8b44f7af); 
-    __m128i T10 = _mm_setr_epi32(0xffff5bb1,0xffff5bb1,0xffff5bb1,0xffff5bb1); 
-    __m128i T11 = _mm_setr_epi32(0x895cd7be,0x895cd7be,0x895cd7be,0x895cd7be);
-    __m128i T12 = _mm_setr_epi32(0x6b901122,0x6b901122,0x6b901122,0x6b901122); 
-    __m128i T13 = _mm_setr_epi32(0xfd987193,0xfd987193,0xfd987193,0xfd987193); 
-    __m128i T14 = _mm_setr_epi32(0xa679438e,0xa679438e,0xa679438e,0xa679438e); 
-    __m128i T15 = _mm_setr_epi32(0x49b40821,0x49b40821,0x49b40821,0x49b40821);
+    __m128 *avxa = (__m128*) md5;
+    avxa = _mm_setr_epi32(0x67452301,0x67452301,0x67452301,0x67452301);
+    __m128 *avxb = (__m128*) md5;
+    avxb = _mm_setr_epi32(0xefcdab89,0xefcdab89,0xefcdab89,0xefcdab89);
+    __m128 *avxc = (__m128*) md5;
+    avxc = _mm_setr_epi32(0x98badcfe,0x98badcfe,0x98badcfe,0x98badcfe);
+    __m128 *avxd = (__m128*) md5;
+    avxd = _mm_setr_epi32(0x10325476,0x10325476,0x10325476,0x10325476);
+
+    __m128 *avx = (__m128*) md5;
+    avx[0] = _mm_setr_epi32(0,0,0,0);
+    avx[1] = _mm_setr_epi32(0,0,0,0);
+    avx[2] = _mm_setr_epi32(0,0,0,0);
+    avx[3] = _mm_setr_epi32(0,0,0,0);
+    avx[4] = _mm_setr_epi32(0,0,0,0);
+    avx[5] = _mm_setr_epi32(0,0,0,0);
+    avx[6] = _mm_setr_epi32(0,0,0,0);
+    avx[7] = _mm_setr_epi32(0,0,0,0);
+    avx[8] = _mm_setr_epi32(0,0,0,0);
+    avx[9] = _mm_setr_epi32(0,0,0,0);
+    avx[10] = _mm_setr_epi32(0,0,0,0);
+    avx[11] = _mm_setr_epi32(0,0,0,0);
+    avx[12] = _mm_setr_epi32(0,0,0,0);
+    avx[13] = _mm_setr_epi32(0,0,0,0);
+    avx[14] = _mm_setr_epi32(0,0,0,0);
+    avx[15] = _mm_setr_epi32(0,0,0,0);
+
+    __m128 *avx_hash = (__m128*) md5;
+    avx_hash[0] = _mm_setr_epi32(0,0,0,0);
+    avx_hash[1] = _mm_setr_epi32(0,0,0,0);
+    avx_hash[2] = _mm_setr_epi32(0,0,0,0);
+    avx_hash[3] = _mm_setr_epi32(0,0,0,0);
     
-    __m128i T16 = _mm_setr_epi32(0xf61e2562,0xf61e2562,0xf61e2562,0xf61e2562); 
-    __m128i T17 = _mm_setr_epi32(0xc040b340,0xc040b340,0xc040b340,0xc040b340); 
-    __m128i T18 = _mm_setr_epi32(0x265e5a51,0x265e5a51,0x265e5a51,0x265e5a51); 
-    __m128i T19 = _mm_setr_epi32(0xe9b6c7aa,0xe9b6c7aa,0xe9b6c7aa,0xe9b6c7aa);
-    __m128i T20 = _mm_setr_epi32(0xd62f105d,0xd62f105d,0xd62f105d,0xd62f105d); 
-    __m128i T21 = _mm_setr_epi32(0x02441453,0x02441453,0x02441453,0x02441453); 
-    __m128i T22 = _mm_setr_epi32(0xd8a1e681,0xd8a1e681,0xd8a1e681,0xd8a1e681); 
-    __m128i T23 = _mm_setr_epi32(0xe7d3fbc8,0xe7d3fbc8,0xe7d3fbc8,0xe7d3fbc8);
-    __m128i T24 = _mm_setr_epi32(0x21e1cde6,0x21e1cde6,0x21e1cde6,0x21e1cde6); 
-    __m128i T25 = _mm_setr_epi32(0xc33707d6,0xc33707d6,0xc33707d6,0xc33707d6); 
-    __m128i T26 = _mm_setr_epi32(0xf4d50d87,0xf4d50d87,0xf4d50d87,0xf4d50d87); 
-    __m128i T27 = _mm_setr_epi32(0x455a14ed,0x455a14ed,0x455a14ed,0x455a14ed);
-    __m128i T28 = _mm_setr_epi32(0xa9e3e905,0xa9e3e905,0xa9e3e905,0xa9e3e905); 
-    __m128i T29 = _mm_setr_epi32(0xfcefa3f8,0xfcefa3f8,0xfcefa3f8,0xfcefa3f8); 
-    __m128i T30 = _mm_setr_epi32(0x676f02d9,0x676f02d9,0x676f02d9,0x676f02d9); 
-    __m128i T31 = _mm_setr_epi32(0x8d2a4c8a,0x8d2a4c8a,0x8d2a4c8a,0x8d2a4c8a);
-    
-    __m128i T32 = _mm_setr_epi32(0xfffa3942,0xfffa3942,0xfffa3942,0xfffa3942); 
-    __m128i T33 = _mm_setr_epi32(0x8771f681,0x8771f681,0x8771f681,0x8771f681); 
-    __m128i T34 = _mm_setr_epi32(0x6d9d6122,0x6d9d6122,0x6d9d6122,0x6d9d6122); 
-    __m128i T35 = _mm_setr_epi32(0xfde5380c,0xfde5380c,0xfde5380c,0xfde5380c);
-    __m128i T36 = _mm_setr_epi32(0xa4beea44,0xa4beea44,0xa4beea44,0xa4beea44); 
-    __m128i T37 = _mm_setr_epi32(0x4bdecfa9,0x4bdecfa9,0x4bdecfa9,0x4bdecfa9); 
-    __m128i T38 = _mm_setr_epi32(0xf6bb4b60,0xf6bb4b60,0xf6bb4b60,0xf6bb4b60); 
-    __m128i T39 = _mm_setr_epi32(0xbebfbc70,0xbebfbc70,0xbebfbc70,0xbebfbc70);
-    __m128i T40 = _mm_setr_epi32(0x289b7ec6,0x289b7ec6,0x289b7ec6,0x289b7ec6); 
-    __m128i T41 = _mm_setr_epi32(0xeaa127fa,0xeaa127fa,0xeaa127fa,0xeaa127fa); 
-    __m128i T42 = _mm_setr_epi32(0xd4ef3085,0xd4ef3085,0xd4ef3085,0xd4ef3085); 
-    __m128i T43 = _mm_setr_epi32(0x04881d05,0x04881d05,0x04881d05,0x04881d05);
-    __m128i T44 = _mm_setr_epi32(0xd9d4d039,0xd9d4d039,0xd9d4d039,0xd9d4d039); 
-    __m128i T45 = _mm_setr_epi32(0xe6db99e5,0xe6db99e5,0xe6db99e5,0xe6db99e5); 
-    __m128i T46 = _mm_setr_epi32(0x1fa27cf8,0x1fa27cf8,0x1fa27cf8,0x1fa27cf8); 
-    __m128i T47 = _mm_setr_epi32(0xc4ac5665,0xc4ac5665,0xc4ac5665,0xc4ac5665);
-    
-    __m128i T48 = _mm_setr_epi32(0xf4292244,0xf4292244,0xf4292244,0xf4292244); 
-    __m128i T49 = _mm_setr_epi32(0x432aff97,0x432aff97,0x432aff97,0x432aff97); 
-    __m128i T50 = _mm_setr_epi32(0xab9423a7,0xab9423a7,0xab9423a7,0xab9423a7); 
-    __m128i T51 = _mm_setr_epi32(0xfc93a039,0xfc93a039,0xfc93a039,0xfc93a039);
-    __m128i T52 = _mm_setr_epi32(0x655b59c3,0x655b59c3,0x655b59c3,0x655b59c3); 
-    __m128i T53 = _mm_setr_epi32(0x8f0ccc92,0x8f0ccc92,0x8f0ccc92,0x8f0ccc92); 
-    __m128i T54 = _mm_setr_epi32(0xffeff47d,0xffeff47d,0xffeff47d,0xffeff47d); 
-    __m128i T55 = _mm_setr_epi32(0x85845dd1,0x85845dd1,0x85845dd1,0x85845dd1);
-    __m128i T56 = _mm_setr_epi32(0x6fa87e4f,0x6fa87e4f,0x6fa87e4f,0x6fa87e4f); 
-    __m128i T57 = _mm_setr_epi32(0xfe2ce6e0,0xfe2ce6e0,0xfe2ce6e0,0xfe2ce6e0); 
-    __m128i T58 = _mm_setr_epi32(0xa3014314,0xa3014314,0xa3014314,0xa3014314); 
-    __m128i T59 = _mm_setr_epi32(0x4e0811a1,0x4e0811a1,0x4e0811a1,0x4e0811a1);
-    __m128i T60 = _mm_setr_epi32(0xf7537e82,0xf7537e82,0xf7537e82,0xf7537e82); 
-    __m128i T61 = _mm_setr_epi32(0xbd3af235,0xbd3af235,0xbd3af235,0xbd3af235); 
-    __m128i T62 = _mm_setr_epi32(0x2ad7d2bb,0x2ad7d2bb,0x2ad7d2bb,0x2ad7d2bb); 
-    __m128i T63 = _mm_setr_epi32(0xeb86d391,0xeb86d391,0xeb86d391,0xeb86d391);
+    __m128 *f = (__m128*) md5;
+    f[1] = _mm_setr_epi32(0,0,0,0);
+    f[2] = _mm_setr_epi32(0,0,0,0);
+    f[3] = _mm_setr_epi32(0,0,0,0);
+    f[4] = _mm_setr_epi32(0,0,0,0);
+    f[5] = _mm_setr_epi32(0,0,0,0);
+    f[6] = _mm_setr_epi32(0,0,0,0);
+    f[7] = _mm_setr_epi32(0,0,0,0);
+    f[8] = _mm_setr_epi32(0,0,0,0);
+    f[9] = _mm_setr_epi32(0,0,0,0);
+    f[0] = _mm_setr_epi32(0,0,0,0);
 
 
     // // Initialize the 'S' variables
@@ -386,19 +412,13 @@ void avx_manipulate_p1(MD5 *md5, uchar message0[], uchar message1[], uchar messa
         msg3[i] = (message3[j]) + (message3[j + 1] << 8) + (message3[j + 2] << 16) + (message3[j + 3] << 24);
     }
 
+    /*...............................PRINTING TO TEST THE PROGRAM...............................*/
 
     avx_print_int(msg0);
     avx_print_int(msg1);
     avx_print_int(msg2);
     avx_print_int(msg3);
 
-    /*...................The Program is working up until this point...................*/
-    /*...................The Program is working up until this point...................*/
-    /*...................The Program is working up until this point...................*/
-    /*...................The Program is working up until this point...................*/
-    /*...................The Program is working up until this point...................*/
-    /*...................The Program is working up until this point...................*/
-    
 
     md5 -> avx0 = _mm_setr_epi32(msg0[0],msg1[0],msg2[0],msg3[0]);
     md5 -> avx1 = _mm_setr_epi32(msg0[1],msg1[1],msg2[1],msg3[1]);
@@ -416,8 +436,52 @@ void avx_manipulate_p1(MD5 *md5, uchar message0[], uchar message1[], uchar messa
     md5 -> avx13 = _mm_setr_epi32(msg0[13],msg1[13],msg2[13],msg3[13]);
     md5 -> avx14 = _mm_setr_epi32(msg0[14],msg1[14],msg2[14],msg3[14]);
     md5 -> avx15 = _mm_setr_epi32(msg0[15],msg1[15],msg2[15],msg3[15]);
-    
-    // Store all initial values of a,b,c,d into their respective variables for manipulation
+
+    /*...............................PRINTING TO TEST THE PROGRAM...............................*/
+
+  int* res0 = (int*)&md5->avx0;
+  printf("avx0 =  %x %x %x %x\n",res0[0],res0[1],res0[2],res0[3]);
+  int* res1 = (int*)&md5->avx1;
+  printf("avx1 =  %x %x %x %x\n",res1[0],res1[1],res1[2],res1[3]);
+  int* res2 = (int*)&md5->avx2;
+  printf("avx2 =  %x %x %x %x\n",res2[0],res2[1],res2[2],res2[3]);
+  int* res3 = (int*)&md5->avx3;
+  printf("avx3 =  %x %x %x %x\n",res3[0],res3[1],res3[2],res3[3]);
+  int* res4 = (int*)&md5->avx4;
+  printf("avx4 =  %x %x %x %x\n",res4[0],res4[1],res4[2],res4[3]);
+  int* res5 = (int*)&md5->avx5;
+  printf("avx5 =  %x %x %x %x\n",res5[0],res5[1],res5[2],res5[3]);
+  int* res6 = (int*)&md5->avx6;
+  printf("avx6 =  %x %x %x %x\n",res6[0],res6[1],res6[2],res6[3]);
+  int* res7 = (int*)&md5->avx7;
+  printf("avx7 =  %x %x %x %x\n",res7[0],res7[1],res7[2],res7[3]);
+  int* res8 = (int*)&md5->avx8;
+  printf("avx8 =  %x %x %x %x\n",res8[0],res8[1],res8[2],res8[3]);
+  int* res9 = (int*)&md5->avx9;
+  printf("avx9 =  %x %x %x %x\n",res9[0],res9[1],res9[2],res9[3]);
+  int* res10 = (int*)&md5->avx10;
+  printf("avx10 =  %x %x %x %x\n",res10[0],res10[1],res10[2],res10[3]);
+  int* res11 = (int*)&md5->avx11;
+  printf("avx11 =  %x %x %x %x\n",res11[0],res11[1],res11[2],res11[3]);
+  int* res12 = (int*)&md5->avx12;
+  printf("avx12 =  %x %x %x %x\n",res12[0],res12[1],res12[2],res12[3]);
+  int* res13 = (int*)&md5->avx13;
+  printf("avx13 =  %x %x %x %x\n",res13[0],res13[1],res13[2],res13[3]);
+  int* res14 = (int*)&md5->avx14;
+  printf("avx14 =  %x %x %x %x\n",res14[0],res14[1],res14[2],res14[3]);
+  int* res15 = (int*)&md5->avx15;
+  printf("avx15 =  %x %x %x %x\n",res15[0],res15[1],res15[2],res15[3]);
+
+
+
+    /*...................The Program is working up until this point...................*/
+    /*...................The Program is working up until this point...................*/
+    /*...................The Program is working up until this point...................*/
+    /*...................The Program is working up until this point...................*/
+    /*...................The Program is working up until this point...................*/
+    /*...................The Program is working up until this point...................*/
+
+
 }
     
 
@@ -505,7 +569,19 @@ void avx_manipulate_p2(MD5 *md5){
     __m128i d = _mm_setr_epi32(0x10325476,0x10325476,0x10325476,0x10325476);
     __m128i l = _mm_setr_epi32(0x11111111,0x11111111,0x11111111,0x11111111);
 
-    avx_F(md5, a, b, c, d, md5->avx0,  S[0],  T0, k[0]);
+    avx_F(md5, a, b, c, d, md5->avx0,  S[0],  md5->T0, k[0]);
+
+    // int* resa = (int*)&a;
+    // printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    // int* resb = (int*)&b;
+    // printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    // int* resc = (int*)&c;
+    // printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    // int* resd = (int*)&d;
+    // printf("d =  %x %x %x %x\n",resd[0],resd[1],resd[2],resd[3]);
+    // int* resT0 = (int*)&T0;
+    // printf("T0 =  %x %x %x %x\n",resT0[0],resT0[1],resT0[2],resT0[3]);
+
     avx_F(md5, d, a, b, c, md5->avx1,  S[1],  T1, k[1]);
     avx_F(md5, c, d, a, b, md5->avx2,  S[2],  T2, k[2]);
     avx_F(md5, b, c, d, a, md5->avx3,  S[3],  T3, k[3]);
@@ -521,6 +597,15 @@ void avx_manipulate_p2(MD5 *md5){
     avx_F(md5, d, a, b, c, md5->avx13, S[13], T13, k[13]);
     avx_F(md5, c, d, a, b, md5->avx14, S[14], T14, k[14]);
     avx_F(md5, b, c, d, a, md5->avx15, S[15], T15, k[15]);
+
+    int* resa = (int*)&a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    int* resb = (int*)&b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    int* resc = (int*)&c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    int* resd = (int*)&d;
+    printf("d =  %x %x %x %x\n",resd[0],resd[1],resd[2],resd[3]);
 
     avx_G(md5, a, b, c, d, md5->avx1,  S[16], T16, k[16]);
     avx_G(md5, d, a, b, c, md5->avx6,  S[17], T17, k[17]);
