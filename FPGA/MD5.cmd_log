@@ -1,0 +1,6 @@
+xst -intstyle ise -ifn "C:/Users/Taylor/Documents/GitHub/hashing-optimization-/FPGA/MD5.xst" -ofn "C:/Users/Taylor/Documents/GitHub/hashing-optimization-/FPGA/MD5.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc myandgate.ucf -p xc3s1200e-fg320-4 MD5.ngc MD5.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o MD5_map.ncd MD5.ngd MD5.pcf 
+par -w -intstyle ise -ol high -t 1 MD5_map.ncd MD5.ncd MD5.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml MD5.twx MD5.ncd -o MD5.twr MD5.pcf -ucf myandgate.ucf 
+bitgen -intstyle ise -f MD5.ut MD5.ncd 

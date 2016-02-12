@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "C:/Users/Taylor/Documents/GitHub/hashing-optimization-/FPGA/MD5test.xst" -ofn "C:/Users/Taylor/Documents/GitHub/hashing-optimization-/FPGA/MD5test.syr" 

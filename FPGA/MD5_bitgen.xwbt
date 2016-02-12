@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\Users\Taylor\Documents\GitHub\hashing-optimization-\FPGA\MD5.ncd
+OUTFILE=C:\Users\Taylor\Documents\GitHub\hashing-optimization-\FPGA\MD5.bit
+FAMILY=Spartan3E
+PART=xc3s1200e-4fg320
+WORKINGDIR=C:\Users\Taylor\Documents\GitHub\hashing-optimization-\FPGA
+LICENSE=WebPack
+USER_INFO=210864834_0_0_333
