@@ -76,6 +76,7 @@ typedef struct {
     __m128i avxa, avxb, avxc, avxd;
     __m128i avx_hash0, avx_hash1, avx_hash2, avx_hash3;
     __m128i f1,f2,f3,f4,f5,f6,f7,f8,f9,f0;
+    __m128i za,zb,zc,zd;
     __m128i avx0, avx1, avx2, avx3;
     __m128i avx4, avx5, avx6, avx7;
     __m128i avx8, avx9, avx10, avx11;
@@ -135,6 +136,11 @@ void avx_initialize(MD5 *md5)
     md5->avx_hash1 = _mm_set1_epi32(0);
     md5->avx_hash2 = _mm_set1_epi32(0);
     md5->avx_hash3 = _mm_set1_epi32(0);
+
+    md5->za = _mm_set1_epi32(0);
+    md5->zb = _mm_set1_epi32(0);
+    md5->zc = _mm_set1_epi32(0);
+    md5->zd = _mm_set1_epi32(0);
     
     md5->f1 = _mm_set1_epi32(0);
     md5->f2 = _mm_set1_epi32(0);
@@ -429,6 +435,10 @@ void avx_F(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     md5->m = m;
     md5->t = t;
 
+    md5->zb = md5->b;
+    md5->zc = md5->c;
+    md5->zd = md5->d;
+
     md5->f1 = _mm_and_si128(md5->b,md5->c);
     md5->f2 = _mm_andnot_si128(md5->b,md5->d);
     md5->f3 = _mm_or_si128(md5->f1,md5->f2);
@@ -441,7 +451,7 @@ void avx_F(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     md5->f8 = _mm_srli_epi32(md5->f6,k);
     md5->f9 = _mm_or_si128(md5->f7,md5->f8);
 
-    md5->a = _mm_add_epi32(md5->f9,md5->b);
+    md5->f0 = _mm_add_epi32(md5->f9,md5->b);
 }
 
 void avx_G(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int s, __m128i t, int k){
@@ -449,6 +459,10 @@ void avx_G(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     //#define G(b, c, d) ((b & d) | (c & ~d))
     md5->m = m;
     md5->t = t;
+
+    md5->zb = md5->b;
+    md5->zc = md5->c;
+    md5->zd = md5->d;
 
     md5->f1 = _mm_and_si128(md5->b,md5->d);
     md5->f2 = _mm_andnot_si128(md5->d,md5->c);
@@ -462,7 +476,7 @@ void avx_G(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     md5->f8 = _mm_srli_epi32(md5->f6,k);
     md5->f9 = _mm_or_si128(md5->f7,md5->f8);
 
-    md5->a = _mm_add_epi32(md5->f9,md5->b);
+    md5->f0 = _mm_add_epi32(md5->f9,md5->b);
 }
 
 void avx_H(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int s, __m128i t, int k){
@@ -470,6 +484,10 @@ void avx_H(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     //#define H(b, c, d) ((b ^ c ^ d))
     md5->m = m;
     md5->t = t;
+
+    md5->zb = md5->b;
+    md5->zc = md5->c;
+    md5->zd = md5->d;
     
     md5->f1 = _mm_xor_si128(md5->b,md5->c);
     md5->f2 = _mm_xor_si128(md5->f1,md5->d);
@@ -482,7 +500,8 @@ void avx_H(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     md5->f7 = _mm_srli_epi32(md5->f5,k);
     md5->f8 = _mm_or_si128(md5->f6,md5->f7);
 
-    md5->a = _mm_add_epi32(md5->f8,md5->b);
+    md5->f0 = _mm_add_epi32(md5->f8,md5->b);
+
 }
 
 void avx_I(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int s, __m128i t, __m128i l, int k){
@@ -490,6 +509,10 @@ void avx_I(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     //#define I(b, c, d) ((c ^ (b | ~d)))
     md5->m = m;
     md5->t = t;
+
+    md5->zb = md5->b;
+    md5->zc = md5->c;
+    md5->zd = md5->d;
 
     md5->f1 = _mm_andnot_si128(md5->d,md5->l);
     md5->f2 = _mm_or_si128(md5->f1,md5->b);
@@ -503,7 +526,7 @@ void avx_I(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d, __m128i m, int 
     md5->f8 = _mm_srli_epi32(md5->f6,k);
     md5->f9 = _mm_or_si128(md5->f7,md5->f8);
 
-    md5->a = _mm_add_epi32(md5->f9,md5->b);
+    md5->f0 = _mm_add_epi32(md5->f9,md5->b);
 }
 
 void avx_add_hash(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d){
@@ -515,79 +538,220 @@ void avx_add_hash(MD5 *md5, __m128i a, __m128i b, __m128i c, __m128i d){
 
     
 void avx_manipulate_p2(MD5 *md5){
-
-    int* resm = (int*)&md5->avx0;
-    printf("m =  %x %x %x %x\n",resm[0],resm[1],resm[2],resm[3]);
-    int* rest = (int*)&md5->T0;
-    printf("t =  %x %x %x %x\n",rest[0],rest[1],rest[2],rest[3]);
+int* resa;
+int* resb;
+int* resc;
+int* resd;
 
     avx_F(md5, md5->a, md5->b, md5->c, md5->d, md5->avx0,  S[0],  md5->T0, k[0]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->d, md5->a, md5->b, md5->c, md5->avx1,  S[1],  md5->T1, k[1]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->c, md5->d, md5->a, md5->b, md5->avx2,  S[2],  md5->T2, k[2]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->b, md5->c, md5->d, md5->a, md5->avx3,  S[3],  md5->T3, k[3]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+    resa = (int*)&md5->a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
     avx_F(md5, md5->a, md5->b, md5->c, md5->d, md5->avx4,  S[4],  md5->T4, k[4]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->d, md5->a, md5->b, md5->c, md5->avx5,  S[5],  md5->T5, k[5]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->c, md5->d, md5->a, md5->b, md5->avx6,  S[6],  md5->T6, k[6]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->b, md5->c, md5->d, md5->a, md5->avx7,  S[7],  md5->T7, k[7]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+    resa = (int*)&md5->a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
     avx_F(md5, md5->a, md5->b, md5->c, md5->d, md5->avx8,  S[8],  md5->T8, k[8]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->d, md5->a, md5->b, md5->c, md5->avx9,  S[9],  md5->T9, k[9]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->c, md5->d, md5->a, md5->b, md5->avx10, S[10], md5->T10, k[10]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->b, md5->c, md5->d, md5->a, md5->avx11, S[11], md5->T11, k[11]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+    resa = (int*)&md5->a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
     avx_F(md5, md5->a, md5->b, md5->c, md5->d, md5->avx12, S[12], md5->T12, k[12]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->d, md5->a, md5->b, md5->c, md5->avx13, S[13], md5->T13, k[13]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->c, md5->d, md5->a, md5->b, md5->avx14, S[14], md5->T14, k[14]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_F(md5, md5->b, md5->c, md5->d, md5->a, md5->avx15, S[15], md5->T15, k[15]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+    resa = (int*)&md5->a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
+
+
+    // resa = (int*)&md5->a;
+    // printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    // resb = (int*)&md5->b;
+    // printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    // resc = (int*)&md5->c;
+    // printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    // resd = (int*)&md5->d;
+    // printf("d =  %x %x %x %x\n",resd[0],resd[1],resd[2],resd[3]);
+
+
+
+
+
+    // int* resa = (int*)&md5->a;
+    // printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    // int* resb = (int*)&md5->b;
+    // printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    // int* resc = (int*)&md5->c;
+    // printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    // int* resd = (int*)&md5->d;
+    // printf("d =  %x %x %x %x\n",resd[0],resd[1],resd[2],resd[3]);
+    // int* res_avx0 = (int*)&md5->avx15;
+    // printf("avx15 =  %x %x %x %x\n",res_avx0[0],res_avx0[1],res_avx0[2],res_avx0[3]);
+    // int* resT0 = (int*)&md5->T15;
+    // printf("T15 =  %x %x %x %x\n",resT0[0],resT0[1],resT0[2],resT0[3]);
 
     avx_G(md5, md5->a, md5->b, md5->c, md5->d, md5->avx1,  S[16], md5->T16, k[16]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->d, md5->a, md5->b, md5->c, md5->avx6,  S[17], md5->T17, k[17]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->c, md5->d, md5->a, md5->b, md5->avx11, S[18], md5->T18, k[18]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->b, md5->c, md5->d, md5->a, md5->avx0,  S[19], md5->T19, k[19]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->a, md5->b, md5->c, md5->d, md5->avx5,  S[20], md5->T20, k[20]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->d, md5->a, md5->b, md5->c, md5->avx10, S[21], md5->T21, k[21]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->c, md5->d, md5->a, md5->b, md5->avx15, S[22], md5->T22, k[22]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->b, md5->c, md5->d, md5->a, md5->avx4,  S[23], md5->T23, k[23]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->a, md5->b, md5->c, md5->d, md5->avx9,  S[24], md5->T24, k[24]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->d, md5->a, md5->b, md5->c, md5->avx14, S[25], md5->T25, k[25]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->c, md5->d, md5->a, md5->b, md5->avx3,  S[26], md5->T26, k[26]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->b, md5->c, md5->d, md5->a, md5->avx8,  S[27], md5->T27, k[27]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->a, md5->b, md5->c, md5->d, md5->avx13, S[28], md5->T28, k[28]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->d, md5->a, md5->b, md5->c, md5->avx2,  S[29], md5->T29, k[29]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->c, md5->d, md5->a, md5->b, md5->avx7,  S[30], md5->T30, k[30]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_G(md5, md5->b, md5->c, md5->d, md5->a, md5->avx12, S[31], md5->T31, k[31]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+    resa = (int*)&md5->a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
 
     avx_H(md5, md5->a, md5->b, md5->c, md5->d, md5->avx5,  S[32], md5->T32, k[32]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->d, md5->a, md5->b, md5->c, md5->avx8,  S[33], md5->T33, k[33]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->c, md5->d, md5->a, md5->b, md5->avx11, S[34], md5->T34, k[34]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->b, md5->c, md5->d, md5->a, md5->avx14, S[35], md5->T35, k[35]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->a, md5->b, md5->c, md5->d, md5->avx1,  S[36], md5->T36, k[36]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->d, md5->a, md5->b, md5->c, md5->avx4,  S[37], md5->T37, k[37]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->c, md5->d, md5->a, md5->b, md5->avx7,  S[38], md5->T38, k[38]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->b, md5->c, md5->d, md5->a, md5->avx10, S[39], md5->T39, k[39]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->a, md5->b, md5->c, md5->d, md5->avx13, S[40], md5->T40, k[40]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->d, md5->a, md5->b, md5->c, md5->avx0,  S[41], md5->T41, k[41]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->c, md5->d, md5->a, md5->b, md5->avx3,  S[42], md5->T42, k[42]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->b, md5->c, md5->d, md5->a, md5->avx6,  S[43], md5->T43, k[43]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->a, md5->b, md5->c, md5->d, md5->avx9,  S[44], md5->T44, k[44]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->d, md5->a, md5->b, md5->c, md5->avx12, S[45], md5->T45, k[45]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->c, md5->d, md5->a, md5->b, md5->avx15, S[46], md5->T46, k[46]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_H(md5, md5->b, md5->c, md5->d, md5->a, md5->avx2,  S[47], md5->T47, k[47]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+
+    resa = (int*)&md5->a;
+    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
 
     avx_I(md5, md5->a, md5->b, md5->c, md5->d, md5->avx0,  S[48], md5->T48, md5->l, k[48]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->d, md5->a, md5->b, md5->c, md5->avx7,  S[49], md5->T49, md5->l, k[49]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->c, md5->d, md5->a, md5->b, md5->avx14, S[50], md5->T50, md5->l, k[50]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->b, md5->c, md5->d, md5->a, md5->avx5,  S[51], md5->T51, md5->l, k[51]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->a, md5->b, md5->c, md5->d, md5->avx12, S[52], md5->T52, md5->l, k[52]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->d, md5->a, md5->b, md5->c, md5->avx3,  S[53], md5->T53, md5->l, k[53]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->c, md5->d, md5->a, md5->b, md5->avx10, S[54], md5->T54, md5->l, k[54]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->b, md5->c, md5->d, md5->a, md5->avx1,  S[55], md5->T55, md5->l, k[55]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->a, md5->b, md5->c, md5->d, md5->avx8,  S[56], md5->T56, md5->l, k[56]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->d, md5->a, md5->b, md5->c, md5->avx15, S[57], md5->T57, md5->l, k[57]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->c, md5->d, md5->a, md5->b, md5->avx6,  S[58], md5->T58, md5->l, k[58]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->b, md5->c, md5->d, md5->a, md5->avx13, S[59], md5->T59, md5->l, k[59]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->a, md5->b, md5->c, md5->d, md5->avx4,  S[60], md5->T60, md5->l, k[60]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->d, md5->a, md5->b, md5->c, md5->avx11, S[61], md5->T61, md5->l, k[61]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->c, md5->d, md5->a, md5->b, md5->avx2,  S[62], md5->T62, md5->l, k[62]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     avx_I(md5, md5->b, md5->c, md5->d, md5->a, md5->avx9,  S[63], md5->T63, md5->l, k[63]);
+    md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
+
+    
 
     avx_add_hash(md5, md5->a, md5->b, md5->c, md5->d);
   

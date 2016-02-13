@@ -33,10 +33,10 @@ int main(int argc, char *argv[]) {
     avx_initialize(&md5);
     avx_set(&md5,pass0,pass1,pass2,pass3,strlen((char*)pass0),strlen((char*)pass1),strlen((char*)pass2),strlen((char*)pass3));
     avx_pad(&md5);
-    avx_print(&md5,md5.message0);
-    avx_print(&md5,md5.message1);
-    avx_print(&md5,md5.message2);
-    avx_print(&md5,md5.message3);
+    // avx_print(&md5,md5.message0);
+    // avx_print(&md5,md5.message1);
+    // avx_print(&md5,md5.message2);
+    // avx_print(&md5,md5.message3);
     avx_manipulate_p1(&md5,md5.message0,md5.message1,md5.message2,md5.message3);
     avx_manipulate_p2(&md5);
 
