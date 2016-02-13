@@ -25,7 +25,7 @@
 `define RND3 2'b10
 `define RND4 2'b11
 
-module MD5_rnd(
+module MD5_round(
 		a
 		,b
 		,c
@@ -109,31 +109,31 @@ end
 //functions
 //---------------
 function [31:0] F;
-input [31:0] x, y, z;
-begin // {
-   F = (x&y)|((~x)&z);
-end // }
-endfunction // }
+   input [31:0] x, y, z;
+      begin
+         F = (x&y)|((~x)&z);
+      end
+endfunction
 
 function [31:0] G;
-input [31:0] x, y, z;
-begin
-   G = (x&z)|(y&(~z));
-end
+   input [31:0] x, y, z;
+      begin
+         G = (x&z)|(y&(~z));
+      end
 endfunction 
 
 function [31:0] H;
-input [31:0] x, y, z;
-begin
-   H = (x^y^z);
-end
+   input [31:0] x, y, z;
+      begin
+         H = (x^y^z);
+      end
 endfunction 
 
 function [31:0] I;
-input [31:0] x, y, z;
-begin
-   I = (y^(x|(~z)));
-end
+   input [31:0] x, y, z;
+      begin
+         I = (y^(x|(~z)));
+      end
 endfunction 
 
 endmodule 
