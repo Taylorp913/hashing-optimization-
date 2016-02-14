@@ -310,13 +310,16 @@ void md5_manipulate(union Guess *md5, union Guess *gss,union Guess *gss2,union G
 	II(b, c, d, a, avx9, 	S[63], 	_mm256_set1_epi32(0xeb86d391));
 	//printstuff(a,b,c,d);
 
-	a += ai;
-	b += bi;
-	c += ci;
-	d += di; 
 
+	__m256i avxai= _mm256_setr_epi32(ai, 0, ai, 0, ai, 0, ai, 0);
+	__m256i avxbi= _mm256_setr_epi32(bi, 0, bi, 0, bi, 0, bi, 0);
+	__m256i avxci= _mm256_setr_epi32(ci, 0, ci, 0, ci, 0, ci, 0);
+	__m256i avxdi= _mm256_setr_epi32(di, 0, di, 0, di, 0, di, 0);
 
-
+	a += avxai;
+	b += avxbi;
+	c += avxci;
+	d += avxdi; 
 
 	uint32_t * A = (uint32_t*)&a;
 	uint32_t * B = (uint32_t*)&b;
