@@ -16,6 +16,9 @@
 //using namespace std;
 
 union Guess guess;
+union Guess guess2;
+union Guess guess3;
+union Guess guess4;
 union Guess output;
 union Guess input;
 
@@ -26,7 +29,7 @@ union Guess input;
 //#define input2 0x08c2102022e3faa8
 
 int main(int argc, char *argv[]) {
-	uint64_t start = Digit6-1;//Digit5 is the start of the 6 digit space
+	uint64_t start = Digit5;//Digit5 is the start of the 6 digit space
 	uint64_t end = Digit6;//Digit6 is end of 6 digit space
 	uint64_t hashes = end - start;
 	uint64_t cmp1, cmp2;
@@ -36,11 +39,24 @@ int main(int argc, char *argv[]) {
 
 	clock_t start_time, final_time;
 	start_time = clock();
+	// increment_pass(&guess2, 1);
+	// increment_pass(&guess3, 2);
+	// increment_pass(&guess4, 3);
 
-
-	for (i = start; i < end; i++) {
+	for (i = start; i < end; i+=4) {
 		increment_pass(&guess, i);
-		md5_manipulate(&output, &guess);
+		increment_pass(&guess2, i+1);
+		increment_pass(&guess3, i+2);
+		increment_pass(&guess4, i+3);
+		// printf("  %s\n", (char *)guess._8);
+		// printf("  %s\n", (char *)guess2._8);
+		// printf("  %s\n", (char *)guess3._8);
+		// printf("  %s\n", (char *)guess4._8);
+
+
+
+
+		md5_manipulate(&output, &guess,&guess2,&guess3,&guess4);
 		//printf("  %s\n", (char *)guess._8);	
 		
 		cmp1 = output._64[0] ^ input._64[0];
@@ -50,6 +66,33 @@ int main(int argc, char *argv[]) {
 		{
 			printf("Found the hash!\n");
 			printf("  %s\n", (char *)guess._8);
+			//exit(1);
+		}
+		cmp1 = output._64[2] ^ input._64[0];
+		cmp2 = output._64[3] ^ input._64[1];
+		
+		if ((cmp1 | cmp2) == 0)
+		{
+			printf("Found the hash!\n");
+			printf("  %s\n", (char *)guess2._8);
+			//exit(1);
+		}
+		cmp1 = output._64[4] ^ input._64[0];
+		cmp2 = output._64[5] ^ input._64[1];
+		
+		if ((cmp1 | cmp2) == 0)
+		{
+			printf("Found the hash!\n");
+			printf("  %s\n", (char *)guess3._8);
+			//exit(1);
+		}
+		cmp1 = output._64[6] ^ input._64[0];
+		cmp2 = output._64[7] ^ input._64[1];
+		
+		if ((cmp1 | cmp2) == 0)
+		{
+			printf("Found the hash!\n");
+			printf("  %s\n", (char *)guess4._8);
 			//exit(1);
 		}
 

@@ -196,7 +196,7 @@ void printstuff(__m256i a,__m256i b,__m256i c,__m256i d){
     printf("d =  %llx %llx %llx %llx\n\n",d[0],d[1],d[2],d[3]);
 }
 
-void md5_manipulate(union Guess *md5, union Guess *gss) {
+void md5_manipulate(union Guess *md5, union Guess *gss,union Guess *gss2,union Guess *gss3,union Guess *gss4) {
 	//unsigned char message[] = {guess->_8[0],guess->_8[1],guess->_8[2],guess->_8[3],guess->_8[4],guess->_8[5],guess->_8[6],guess->_8[7]};
 	//unsigned int a, b, c, d;
 	//unsigned int msg[16];
@@ -215,25 +215,25 @@ void md5_manipulate(union Guess *md5, union Guess *gss) {
 
 
 
-    __m256i avx0= _mm256_setr_epi32(gss->_32[0], 0, gss->_32[0], 0,gss->_32[0], 0, gss->_32[0], 0);
-    __m256i avx1= _mm256_setr_epi32(gss->_32[1], 0, gss->_32[1], 0, gss->_32[1], 0, gss->_32[1], 0);
-    __m256i avx2= _mm256_setr_epi32(gss->_32[2], 0, gss->_32[2], 0, gss->_32[2], 0, gss->_32[2], 0);
-    __m256i avx3= _mm256_setr_epi32(gss->_32[3], 0, gss->_32[3], 0, gss->_32[3], 0, gss->_32[3], 0);
-    __m256i avx4= _mm256_setr_epi32(gss->_32[4], 0, gss->_32[4], 0, gss->_32[4], 0, gss->_32[4], 0);
-    __m256i avx5= _mm256_setr_epi32(gss->_32[5], 0, gss->_32[5], 0, gss->_32[5], 0, gss->_32[5], 0);
-    __m256i avx6= _mm256_setr_epi32(gss->_32[6], 0, gss->_32[6], 0, gss->_32[6], 0, gss->_32[6], 0);
-    __m256i avx7= _mm256_setr_epi32(gss->_32[7], 0, gss->_32[7], 0, gss->_32[7], 0, gss->_32[7], 0);
-    __m256i avx8= _mm256_setr_epi32(gss->_32[8], 0, gss->_32[8], 0, gss->_32[8], 0, gss->_32[8], 0);
-    __m256i avx9= _mm256_setr_epi32(gss->_32[9], 0, gss->_32[9], 0, gss->_32[9], 0, gss->_32[9], 0);
-    __m256i avx10= _mm256_setr_epi32(gss->_32[10], 0, gss->_32[10], 0, gss->_32[10], 0, gss->_32[10], 0);
-    __m256i avx11= _mm256_setr_epi32(gss->_32[11], 0, gss->_32[11], 0, gss->_32[11], 0, gss->_32[11], 0);
-    __m256i avx12= _mm256_setr_epi32(gss->_32[12], 0, gss->_32[12], 0, gss->_32[12], 0, gss->_32[12], 0);
-    __m256i avx13= _mm256_setr_epi32(gss->_32[13], 0, gss->_32[13], 0, gss->_32[13], 0, gss->_32[13], 0);
-    __m256i avx14= _mm256_setr_epi32(gss->_32[14], 0, gss->_32[14], 0, gss->_32[14], 0, gss->_32[14], 0);
-    __m256i avx15= _mm256_setr_epi32(gss->_32[15], 0, gss->_32[15], 0, gss->_32[15], 0, gss->_32[15], 0);
+    __m256i avx0= _mm256_setr_epi32(gss->_32[0], 0, gss2->_32[0], 0, gss3->_32[0], 0, gss4->_32[0], 0);
+    __m256i avx1= _mm256_setr_epi32(gss->_32[1], 0, gss2->_32[1], 0, gss3->_32[1], 0, gss4->_32[1], 0);
+    __m256i avx2= _mm256_setr_epi32(gss->_32[2], 0, gss2->_32[2], 0, gss3->_32[2], 0, gss4->_32[2], 0);
+    __m256i avx3= _mm256_setr_epi32(gss->_32[3], 0, gss2->_32[3], 0, gss3->_32[3], 0, gss4->_32[3], 0);
+    __m256i avx4= _mm256_setr_epi32(gss->_32[4], 0, gss2->_32[4], 0, gss3->_32[4], 0, gss4->_32[4], 0);
+    __m256i avx5= _mm256_setr_epi32(gss->_32[5], 0, gss2->_32[5], 0, gss3->_32[5], 0, gss4->_32[5], 0);
+    __m256i avx6= _mm256_setr_epi32(gss->_32[6], 0, gss2->_32[6], 0, gss3->_32[6], 0, gss4->_32[6], 0);
+    __m256i avx7= _mm256_setr_epi32(gss->_32[7], 0, gss2->_32[7], 0, gss3->_32[7], 0, gss4->_32[7], 0);
+    __m256i avx8= _mm256_setr_epi32(gss->_32[8], 0, gss2->_32[8], 0, gss3->_32[8], 0, gss4->_32[8], 0);
+    __m256i avx9= _mm256_setr_epi32(gss->_32[9], 0, gss2->_32[9], 0, gss3->_32[9], 0, gss4->_32[9], 0);
+    __m256i avx10= _mm256_setr_epi32(gss->_32[10], 0, gss2->_32[10], 0, gss3->_32[10], 0, gss4->_32[10], 0);
+    __m256i avx11= _mm256_setr_epi32(gss->_32[11], 0, gss2->_32[11], 0, gss3->_32[11], 0, gss4->_32[11], 0);
+    __m256i avx12= _mm256_setr_epi32(gss->_32[12], 0, gss2->_32[12], 0, gss3->_32[12], 0, gss4->_32[12], 0);
+    __m256i avx13= _mm256_setr_epi32(gss->_32[13], 0, gss2->_32[13], 0, gss3->_32[13], 0, gss4->_32[13], 0);
+    __m256i avx14= _mm256_setr_epi32(gss->_32[14], 0, gss2->_32[14], 0, gss3->_32[14], 0, gss4->_32[14], 0);
+    __m256i avx15= _mm256_setr_epi32(gss->_32[15], 0, gss2->_32[15], 0, gss3->_32[15], 0, gss4->_32[15], 0);
 
     //printf("byte1 =  %x\n",gss->_32[1]);
-   // printf("x0 =  %llx %llx %llx %llx\n",x0[0],x0[1],x0[2],x0[3]);
+   	//printf("x0 =  %llx %llx %llx %llx\n",x0[0],x0[1],x0[2],x0[3]);
 	
 	//printstuff(a,b,c,d);
 
@@ -310,11 +310,38 @@ void md5_manipulate(union Guess *md5, union Guess *gss) {
 	II(b, c, d, a, avx9, 	S[63], 	_mm256_set1_epi32(0xeb86d391));
 	//printstuff(a,b,c,d);
 
+	a += ai;
+	b += bi;
+	c += ci;
+	d += di; 
+
+
+
+
 	uint32_t * A = (uint32_t*)&a;
 	uint32_t * B = (uint32_t*)&b;
 	uint32_t * C = (uint32_t*)&c;
 	uint32_t * D = (uint32_t*)&d;
 	
+	md5->_32[0] = A[0];
+	md5->_32[1] = B[0];
+	md5->_32[2] = C[0];
+	md5->_32[3] = D[0];
+	md5->_32[4] = A[2];
+	md5->_32[5] = B[2];
+	md5->_32[6] = C[2];
+	md5->_32[7] = D[2];
+	md5->_32[8] = A[4];
+	md5->_32[9] = B[4];
+	md5->_32[10] = C[4];
+	md5->_32[11] = D[4];
+	md5->_32[12] = A[6];
+	md5->_32[13] = B[6];
+	md5->_32[14] = C[6];
+	md5->_32[15] = D[6];
+
+
+
 	// uint32_t D1 = ai+A[0];
 	// uint32_t D2 = bi+B[0];
 	// uint32_t D3 = ci + C[0];
@@ -324,10 +351,10 @@ void md5_manipulate(union Guess *md5, union Guess *gss) {
 
 	// printf("d =  %x ,%x,%x,%x\n\n",A[0],D[2],D[4],D[6]);
 
-	md5->_32[0] = ai+A[0];
-	md5->_32[1] = bi+B[0];
-	md5->_32[2] = ci+C[0];
-	md5->_32[3] = di+D[0];
+	// md5->_32[0] = ai+A[0];
+	// md5->_32[1] = bi+B[0];
+	// md5->_32[2] = ci+C[0];
+	// md5->_32[3] = di+D[0];
 }
 
 
