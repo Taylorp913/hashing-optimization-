@@ -263,13 +263,13 @@ always @(current_state
       4'b0110: begin a=C; b=D; c=A; d=B; m=msg_appended[0:31];    s=32'd14; t=`T_23; next_C=next_a; end
       4'b0111: begin a=B; b=C; c=D; d=A; m=msg_appended[352:383]; s=32'd20; t=`T_24; next_B=next_a; end
       4'b1000: begin a=A; b=B; c=C; d=D; m=msg_appended[192:223]; s=32'd05; t=`T_25; next_A=next_a; end
-      4'b1001: begin a=D; b=A; c=B; d=C; m=msg_appended[32:63];   s=32'd9;  t=`T_26; next_D=next_a; end
+      4'b1001: begin a=D; b=A; c=B; d=C; m=msg_appended[32:63]  ;   s=32'd09;  t=`T_26; next_D=next_a; end
       4'b1010: begin a=C; b=D; c=A; d=B; m=msg_appended[384:415]; s=32'd14; t=`T_27; next_C=next_a; end
       4'b1011: begin a=B; b=C; c=D; d=A; m=msg_appended[224:255]; s=32'd20; t=`T_28; next_B=next_a; end
-      4'b1100: begin a=A; b=B; c=C; d=D; m=msg_appended[64:95];   s=32'd05; t=`T_29; next_A=next_a; end
+      4'b1100: begin a=A; b=B; c=C; d=D; m=msg_appended[64:95]  ;   s=32'd05; t=`T_29; next_A=next_a; end
       4'b1101: begin a=D; b=A; c=B; d=C; m=msg_appended[416:447]; s=32'd09; t=`T_30; next_D=next_a; end
       4'b1110: begin a=C; b=D; c=A; d=B; m=msg_appended[256:287]; s=32'd14; t=`T_31; next_C=next_a; end
-      4'b1111: begin a=B; b=C; c=D; d=A; m=msg_appended[96:127];  s=32'd20; t=`T_32; next_B=next_a; end
+      4'b1111: begin a=B; b=C; c=D; d=A; m=msg_appended[96:127] ;  s=32'd20; t=`T_32; next_B=next_a; end
       endcase
 
       if (phase == 4'b1111)
@@ -290,18 +290,18 @@ always @(current_state
       4'b0000: begin a=A; b=B; c=C; d=D; m=msg_appended[320:351]; s=32'd04; t=`T_33; next_A=next_a; end
       4'b0001: begin a=D; b=A; c=B; d=C; m=msg_appended[224:255]; s=32'd11; t=`T_34; next_D=next_a; end
       4'b0010: begin a=C; b=D; c=A; d=B; m=msg_appended[128:159]; s=32'd16; t=`T_35; next_C=next_a; end
-      4'b0011: begin a=B; b=C; c=D; d=A; m=msg_appended[32:63];   s=32'd23; t=`T_36; next_B=next_a; end
+      4'b0011: begin a=B; b=C; c=D; d=A; m=msg_appended[32:63]  ;   s=32'd23; t=`T_36; next_B=next_a; end
       4'b0100: begin a=A; b=B; c=C; d=D; m=msg_appended[448:479]; s=32'd04; t=`T_37; next_A=next_a; end
       4'b0101: begin a=D; b=A; c=B; d=C; m=msg_appended[352:383]; s=32'd11; t=`T_38; next_D=next_a; end
       4'b0110: begin a=C; b=D; c=A; d=B; m=msg_appended[256:287]; s=32'd16; t=`T_39; next_C=next_a; end
       4'b0111: begin a=B; b=C; c=D; d=A; m=msg_appended[160:191]; s=32'd23; t=`T_40; next_B=next_a; end
-      4'b1000: begin a=A; b=B; c=C; d=D; m=msg_appended[64:95];   s=32'd04; t=`T_41; next_A=next_a; end
+      4'b1000: begin a=A; b=B; c=C; d=D; m=msg_appended[64:95]  ;   s=32'd04; t=`T_41; next_A=next_a; end
       4'b1001: begin a=D; b=A; c=B; d=C; m=msg_appended[480:511]; s=32'd11; t=`T_42; next_D=next_a; end
       4'b1010: begin a=C; b=D; c=A; d=B; m=msg_appended[384:415]; s=32'd16; t=`T_43; next_C=next_a; end
       4'b1011: begin a=B; b=C; c=D; d=A; m=msg_appended[288:319]; s=32'd23; t=`T_44; next_B=next_a; end
       4'b1100: begin a=A; b=B; c=C; d=D; m=msg_appended[192:223]; s=32'd04; t=`T_45; next_A=next_a; end
-      4'b1101: begin a=D; b=A; c=B; d=C; m=msg_appended[96:127];  s=32'd11; t=`T_46; next_D=next_a; end
-      4'b1110: begin a=C; b=D; c=A; d=B; m=msg_appended[0:31];    s=32'd16; t=`T_47; next_C=next_a; end
+      4'b1101: begin a=D; b=A; c=B; d=C; m=msg_appended[96:127] ;  s=32'd11; t=`T_46; next_D=next_a; end
+      4'b1110: begin a=C; b=D; c=A; d=B; m=msg_appended[0:31]   ;    s=32'd16; t=`T_47; next_C=next_a; end
       4'b1111: begin a=B; b=C; c=D; d=A; m=msg_appended[416:447]; s=32'd23; t=`T_48; next_B=next_a; end
       endcase
 
@@ -322,16 +322,16 @@ always @(current_state
       case (phase)
       4'b0000: begin a=A; b=B; c=C; d=D; m=msg_appended[480:511]; s=32'd06; t=`T_49; next_A=next_a; end
       4'b0001: begin a=D; b=A; c=B; d=C; m=msg_appended[256:287]; s=32'd10; t=`T_50; next_D=next_a; end
-      4'b0010: begin a=C; b=D; c=A; d=B; m=msg_appended[32:63];   s=32'd15; t=`T_51; next_C=next_a; end
+      4'b0010: begin a=C; b=D; c=A; d=B; m=msg_appended[32:63]  ;   s=32'd15; t=`T_51; next_C=next_a; end
       4'b0011: begin a=B; b=C; c=D; d=A; m=msg_appended[320:351]; s=32'd21; t=`T_52; next_B=next_a; end
-      4'b0100: begin a=A; b=B; c=C; d=D; m=msg_appended[96:127];  s=32'd06; t=`T_53; next_A=next_a; end
+      4'b0100: begin a=A; b=B; c=C; d=D; m=msg_appended[96:127] ;  s=32'd06; t=`T_53; next_A=next_a; end
       4'b0101: begin a=D; b=A; c=B; d=C; m=msg_appended[384:415]; s=32'd10; t=`T_54; next_D=next_a; end
       4'b0110: begin a=C; b=D; c=A; d=B; m=msg_appended[160:191]; s=32'd15; t=`T_55; next_C=next_a; end
       4'b0111: begin a=B; b=C; c=D; d=A; m=msg_appended[448:479]; s=32'd21; t=`T_56; next_B=next_a; end
       4'b1000: begin a=A; b=B; c=C; d=D; m=msg_appended[224:255]; s=32'd06; t=`T_57; next_A=next_a; end
-      4'b1001: begin a=D; b=A; c=B; d=C; m=msg_appended[0:31];    s=32'd10; t=`T_58; next_D=next_a; end
+      4'b1001: begin a=D; b=A; c=B; d=C; m=msg_appended[0:31]   ;    s=32'd10; t=`T_58; next_D=next_a; end
       4'b1010: begin a=C; b=D; c=A; d=B; m=msg_appended[288:319]; s=32'd15; t=`T_59; next_C=next_a; end
-      4'b1011: begin a=B; b=C; c=D; d=A; m=msg_appended[64:95];   s=32'd21; t=`T_60; next_B=next_a; end
+      4'b1011: begin a=B; b=C; c=D; d=A; m=msg_appended[64:95]  ;   s=32'd21; t=`T_60; next_B=next_a; end
       4'b1100: begin a=A; b=B; c=C; d=D; m=msg_appended[352:383]; s=32'd06; t=`T_61; next_A=next_a; end
       4'b1101: begin a=D; b=A; c=B; d=C; m=msg_appended[128:159]; s=32'd10; t=`T_62; next_D=next_a; end
       4'b1110: begin a=C; b=D; c=A; d=B; m=msg_appended[416:447]; s=32'd15; t=`T_63; next_C=next_a; end

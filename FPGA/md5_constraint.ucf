@@ -1,0 +1,4 @@
+NET "port" LOC = J14 ;
+NET "clk" LOC = B8 ;
+NET "start" LOC = J15 ;
+NET "clk" PERIOD 20ns;

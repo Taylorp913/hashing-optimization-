@@ -1,3 +1,0 @@
-NET "a" LOC = "K18"; # Bank = 1, Pin name = IP, Type = INPUT, Sch name = SW2
-NET "b" LOC = "K17"; # Bank = 1, Pin name = IP, Type = INPUT, Sch name = SW3
-NET "F"  LOC = "K15"; # Bank = 1, Pin name = IO_L12P_1/A8/RHCLK2, Type = RHCLK/DUAL, Sch name = JD8/LD2
