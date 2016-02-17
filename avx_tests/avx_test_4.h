@@ -123,7 +123,7 @@ void avx_initialize(MD5 *md5)
     md5->c = _mm_set1_epi32(0x98badcfe);
     md5->c = _mm_set1_epi32(0x98badcfe);
     md5->d = _mm_set1_epi32(0x10325476);
-    md5->l = _mm_set1_epi32(0x11111111);
+    md5->l = _mm_set1_epi32(0xFFFFFFFF);
     md5->m = _mm_set1_epi32(0);
     md5->t = _mm_set1_epi32(0);
 
@@ -600,13 +600,13 @@ int* resd;
     avx_F(md5, md5->b, md5->c, md5->d, md5->a, md5->avx15, S[15], md5->T15, k[15]);
     md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     resa = (int*)&md5->a;
-    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    printf("Fa =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
     resb = (int*)&md5->b;
-    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    printf("Fb =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
     resc = (int*)&md5->c;
-    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    printf("Fc =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
     resd = (int*)&md5->d;
-    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
+    printf("Fd =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
 
 
     // resa = (int*)&md5->a;
@@ -668,13 +668,13 @@ int* resd;
     avx_G(md5, md5->b, md5->c, md5->d, md5->a, md5->avx12, S[31], md5->T31, k[31]);
     md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
     resa = (int*)&md5->a;
-    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    printf("Ga =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
     resb = (int*)&md5->b;
-    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    printf("Gb =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
     resc = (int*)&md5->c;
-    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    printf("Gc =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
     resd = (int*)&md5->d;
-    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
+    printf("Gd =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
 
     avx_H(md5, md5->a, md5->b, md5->c, md5->d, md5->avx5,  S[32], md5->T32, k[32]);
     md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
@@ -710,13 +710,13 @@ int* resd;
     md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
 
     resa = (int*)&md5->a;
-    printf("a =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    printf("Ha =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
     resb = (int*)&md5->b;
-    printf("b =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    printf("Hb =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
     resc = (int*)&md5->c;
-    printf("c =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    printf("Hc =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
     resd = (int*)&md5->d;
-    printf("d =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
+    printf("Hd =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
 
     avx_I(md5, md5->a, md5->b, md5->c, md5->d, md5->avx0,  S[48], md5->T48, md5->l, k[48]);
     md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
@@ -751,6 +751,14 @@ int* resd;
     avx_I(md5, md5->b, md5->c, md5->d, md5->a, md5->avx9,  S[63], md5->T63, md5->l, k[63]);
     md5->a = md5->zd; md5->b = md5->f0; md5->c = md5->zb; md5->d = md5->zc;
 
+    resa = (int*)&md5->a;
+    printf("Ia =  %x %x %x %x\n",resa[0],resa[1],resa[2],resa[3]);
+    resb = (int*)&md5->b;
+    printf("Ib =  %x %x %x %x\n",resb[0],resb[1],resb[2],resb[3]);
+    resc = (int*)&md5->c;
+    printf("Ic =  %x %x %x %x\n",resc[0],resc[1],resc[2],resc[3]);
+    resd = (int*)&md5->d;
+    printf("Id =  %x %x %x %x\n\n",resd[0],resd[1],resd[2],resd[3]);
     
 
     avx_add_hash(md5, md5->a, md5->b, md5->c, md5->d);
