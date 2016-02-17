@@ -2,7 +2,7 @@
 //  md5.h
 //  md5_project
 //
-//  Created by Danny Froerer on 2/1/16.
+//  Created by Danny Froerer and Taylor Peterson on 2/1/16.
 //  Copyright © 2016 Danny Froerer. All rights reserved.
 //
 
@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cstring>
 #include <stdint.h>
 
 //constructore for input data type
@@ -22,10 +21,10 @@ union Guess
 	uint32_t  _32[16];
 	uint64_t  _64[8];
 
-	Guess() // initialization
-	{
-		memset(&this->_8[0], 0, 64);
-	};
+	// Guess() // initialization
+	// {
+	// 	memset(&this->_8[0], 0, 64);
+	// };
 };
 #define alph(a) ('a'+a)
 void guess_print(union Guess *guess) {
@@ -174,43 +173,6 @@ int S[64] = {
 	6, 10, 15, 21,  6, 10, 15, 21
 };
 
-//uint32_t blocks[16];
-
-typedef struct {
-	unsigned char message[64];      //data
-									// unsigned int msg[16];
-	unsigned int msg_len;           //msg_len
-	unsigned int blocks[4];         //blocks
-	unsigned int msgbitlen[2];      //bitlen
-} MD5;
-
-void md5_initialize(MD5 *md5)
-{
-	md5->msg_len = 0;
-	md5->blocks[0] = ai;
-	md5->blocks[1] = bi;
-	md5->blocks[2] = ci;
-	md5->blocks[3] = di;
-	md5->msgbitlen[0] = 0;
-	md5->msgbitlen[1] = 0;
-
-	// for(unsigned int i = 0; i < 16; i++){
-	//  md5 -> msg[i] = 0;
-	// }
-}
-
-void md5_set(MD5 *md5, unsigned char message[], unsigned long length) {
-	unsigned int i;
-
-	for (i = 0; i < length; i++) {
-		md5->message[md5->msg_len] = message[i];
-		md5->msg_len++;
-		/* if (md5 -> msg_len == 64) {
-		md5_transform(md5,md5 -> message);
-		}*/
-	}
-}
-
 
 void md5_manipulate(union Guess *md5, union Guess *gss) {
 	//unsigned char message[] = {guess->_8[0],guess->_8[1],guess->_8[2],guess->_8[3],guess->_8[4],guess->_8[5],guess->_8[6],guess->_8[7]};
@@ -303,58 +265,6 @@ void md5_manipulate(union Guess *md5, union Guess *gss) {
 	md5->_32[3] = di+d;
 
 
-}
-
-void md5_pad(MD5 *md5) {
-	unsigned int i;
-
-	i = md5->msg_len;
-	md5->message[i++] = 0x80;
-
-	while (i < 64) {
-		md5->message[i++] = 0x00;
-	}
-	md5->message[56] = md5->msg_len * 8;
-
-	// md5_manipulate(md5,md5 -> message);
-
-	/*    else if (md5 -> msg_len >= 56) {
-	md5 -> message[i++] = 0x80;
-	while (i < 64)
-	md5 -> message[i++] = 0x00;
-	md5_manipulate(md5,md5 -> message);
-	memset(md5 -> message,0,56);
-	}*/
-}
-
-//void md5_bigendian(union guess *md5, unsigned char final[]) {
-//
-//	unsigned int m[4], n[4], o[4], p[4];
-//	unsigned int i, j;
-//
-//	for (i = 0, j = 0; i < 4; i++, j += 4) {
-//		m[i] = md5._32[i];
-//		n[i] = md5._32[i];
-//		o[i] = md5._32[i];
-//		p[i] = md5._32[i];
-//		final[j] = (m[i] & 0x000000ff);
-//		final[j + 1] = ((n[i] >> 8) & 0x0000ff);
-//		final[j + 2] = ((o[i] >> 16) & 0x00ff);
-//		final[j + 3] = ((p[i] >> 24) & 0xff);
-//	}
-//	/*    for(i = 0; i < 4; i++){
-//	hash[i] = ((ctx->blocks[i] & 0x000000ff) << 24) +
-//	((ctx->blocks[i] & 0x0000ff00) << 8) +
-//	((ctx->blocks[i] & 0x00ff0000) >> 8) +
-//	((ctx->blocks[i] & 0xff000000) >> 24);
-//	}*/
-//}
-
-void md5_print(unsigned char final[]) {
-	int idx;
-	for (idx = 0; idx < 16; idx++)
-		printf("%02x", final[idx]);
-	printf("\n");
 }
 
 

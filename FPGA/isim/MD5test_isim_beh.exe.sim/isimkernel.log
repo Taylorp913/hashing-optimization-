@@ -1,0 +1,29 @@
+Command line:
+   MD5test_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  50497
+
+Thu Feb 11 15:42:50 2016
+
+
+ Elaboration Time: 0.234375 sec
+
+ Current Memory Usage: 1496.79 Meg
+
+ Total Signals          : 17
+ Total Nets             : 16
+ Total Signal Drivers   : 8
+ Total Blocks           : 3
+ Total Primitive Blocks : 2
+ Total Processes        : 10
+ Total Traceable Variables  : 20
+ Total Scalar Nets and Variables : 98
+Total Line Count : 28
+
+ Total Simulation Time: 0.296875 sec
+
+ Current Memory Usage: 1024.89 Meg
+
+Thu Feb 11 15:44:28 2016
+

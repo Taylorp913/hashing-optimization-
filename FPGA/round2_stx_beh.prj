@@ -1,0 +1,6 @@
+verilog isim_temp "fulladderTP.v"
+verilog isim_temp "adder8TP.v"
+verilog isim_temp "shiftTP.v"
+verilog isim_temp "adder32TP.v"
+verilog isim_temp "round2TP.v"
+verilog isim_temp "C:/Xilinx/14.7/ISE_DS/ISE//verilog/src/glbl.v"
